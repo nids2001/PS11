@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import asteroids.participants.Bullet;
 
 /**
  * Keeps track of the Participants, their motions, and their collisions.
@@ -16,6 +17,8 @@ public class ParticipantState implements Iterable<Participant>
 
     /** Participants that are waiting to be added to the game */
     private Set<Participant> pendingAdds;
+    
+    private boolean bulletsMaxed;
 
     /**
      * Creates an empty ParticipantState.
@@ -25,6 +28,7 @@ public class ParticipantState implements Iterable<Participant>
         // No participants at the start
         participants = new LinkedList<Participant>();
         pendingAdds = new HashSet<Participant>();
+        bulletsMaxed = false;
     }
 
     /**
@@ -47,7 +51,33 @@ public class ParticipantState implements Iterable<Participant>
     {
         pendingAdds.add(p);
     }
-
+    
+    /**
+     * Ensure that there are only 3 bullets at a time
+     */
+    public void bulletMax()
+    {
+        int bulletCount = 0;
+        for (Participant p: participants)
+        {
+            if (!p.isExpired() && p instanceof Bullet)
+                bulletCount++;
+        }
+        
+        if (bulletCount >= 3)
+            bulletsMaxed = true;
+        else
+            bulletsMaxed = false;
+    }
+    
+    /**
+     * Returns whether the amount of bullets is maxed
+     */
+    public boolean isBulletMaxed()
+    {
+        return bulletsMaxed;
+    }
+    
     /**
      * Moves each of the active participants to simulate the passage of time.
      */

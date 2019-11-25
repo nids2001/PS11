@@ -3,6 +3,7 @@ package asteroids.game;
 import static asteroids.game.Constants.*;
 import java.awt.*;
 import java.awt.geom.*;
+import asteroids.participants.Bullet;
 
 /**
  * Represents a single moving element in an asteroids game. Each Participant object has an outline (used for drawing
@@ -280,8 +281,18 @@ public abstract class Participant
         trans.concatenate(AffineTransform.getRotateInstance(rotation));
         border = trans.createTransformedShape(original);
 
-        // If the element has gone sufficiently far out of bounds, move it to
-        // the other side of the screen. This change will take effect next time.
+        if (this instanceof Bullet)
+            edgeExpire();
+        else
+            edgeLoop();
+    }
+    
+    /**
+     * If the element has gone sufficiently far out of bounds, move it to
+     * the other side of the screen. This change will take effect next time.
+     */
+    private void edgeLoop()
+    {
         Rectangle2D bounds = border.getBounds2D();
         if (bounds.getMaxX() < 0)
         {
@@ -299,6 +310,16 @@ public abstract class Participant
         {
             y += -SIZE - (bounds.getMaxY() - bounds.getMinY());
         }
+    }
+    
+    /**
+     * If the bullet has gone out of bounds, the participant is expired
+     */
+    private void edgeExpire()
+    {
+        Rectangle2D bounds = border.getBounds2D();
+        if (bounds.getMaxX() < 0 || bounds.getMinX() >= SIZE || bounds.getMaxY() < 0 || bounds.getMinY() >= SIZE)
+            Participant.expire(this);
     }
 
     /**
