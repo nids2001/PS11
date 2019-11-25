@@ -5,6 +5,7 @@ import java.awt.event.*;
 import java.util.Iterator;
 import javax.swing.*;
 import asteroids.participants.Asteroid;
+import asteroids.participants.Bullet;
 import asteroids.participants.Ship;
 
 /**
@@ -114,7 +115,8 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
      */
     private void placeAsteroids ()
     {
-        addParticipant(new Asteroid(0, 2, EDGE_OFFSET, EDGE_OFFSET, 3, this));
+        addParticipant(new Asteroid(0, 0, EDGE_OFFSET, EDGE_OFFSET, 3, this));
+        addParticipant(new Asteroid(0, 1, EDGE_OFFSET, EDGE_OFFSET, 3, this));
     }
 
     /**
@@ -219,6 +221,7 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
 
             // Move the participants to their new locations
             pstate.moveParticipants();
+            pstate.bulletMax();
 
             // Refresh screen
             display.refresh();
@@ -268,9 +271,11 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
     public void keyPressed (KeyEvent e)
     {
         if (e.getKeyCode() == KeyEvent.VK_RIGHT && ship != null)
-        {
-            ship.turnRight();
-        }
+            ship.setTurning("left", true);
+        if (e.getKeyCode() == KeyEvent.VK_LEFT && ship != null)
+            ship.setTurning("right", true);
+        if (e.getKeyCode() == KeyEvent.VK_SPACE && !pstate.isBulletMaxed())
+            pstate.addParticipant(new Bullet(ship.getXNose(), ship.getYNose(), ship.getRotation(), SPEED_LIMIT+5, this));
     }
 
     @Override
@@ -281,5 +286,9 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
     @Override
     public void keyReleased (KeyEvent e)
     {
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT && ship != null)
+            ship.setTurning("left", false);
+        if (e.getKeyCode() == KeyEvent.VK_LEFT && ship != null)
+            ship.setTurning("right", false);
     }
 }

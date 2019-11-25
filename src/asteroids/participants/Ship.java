@@ -18,6 +18,7 @@ public class Ship extends Participant implements AsteroidDestroyer
 
     /** Game controller */
     private Controller controller;
+    private boolean turningLeft, turningRight;
 
     /**
      * Constructs a ship at the specified coordinates that is pointed in the given direction.
@@ -36,6 +37,8 @@ public class Ship extends Participant implements AsteroidDestroyer
         poly.lineTo(-21, -12);
         poly.closePath();
         outline = poly;
+        
+        turningLeft = turningRight = false;
 
         // Schedule an acceleration in two seconds
         new ParticipantCountdownTimer(this, "move", 2000);
@@ -74,23 +77,33 @@ public class Ship extends Participant implements AsteroidDestroyer
     public void move ()
     {
         applyFriction(SHIP_FRICTION);
+        this.turn();
         super.move();
     }
-
+    
     /**
-     * Turns right by Pi/16 radians
+     * Turns by Pi/16 radians
      */
-    public void turnRight ()
+    public void turn ()
     {
-        rotate(Math.PI / 16);
+        if (turningLeft)
+            rotate(Math.PI / 16);
+        if (turningRight)
+            rotate(-Math.PI / 16);
     }
-
+    
     /**
-     * Turns left by Pi/16 radians
+     * Sets the ship to turning a certain direction
+     * 
+     * @param s Direction
+     * @param b true or false
      */
-    public void turnLeft ()
+    public void setTurning(String s, boolean b)
     {
-        rotate(-Math.PI / 16);
+        if (s.equals("left"))
+            turningLeft = b;
+        if (s.equals("right"))
+            turningRight =b;
     }
 
     /**
