@@ -118,6 +118,8 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
     {
         addParticipant(new Asteroid(0, 0, EDGE_OFFSET, EDGE_OFFSET, 3, this));
         addParticipant(new Asteroid(0, 1, EDGE_OFFSET, EDGE_OFFSET, 3, this));
+        addParticipant(new Asteroid(0, 1, EDGE_OFFSET, EDGE_OFFSET, 3, this));
+        addParticipant(new Asteroid(0, 2, EDGE_OFFSET, EDGE_OFFSET, 3, this));
     }
 
     /**
