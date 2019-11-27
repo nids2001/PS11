@@ -11,7 +11,7 @@ import asteroids.game.Participant;
 /**
  * Represents asteroids
  */
-public class Asteroid extends Participant
+public class Asteroid extends Participant implements ShipDestroyer
 {
     /** The size of the asteroid (0 = small, 1 = medium, 2 = large) */
     private int size;
@@ -137,7 +137,9 @@ public class Asteroid extends Participant
     }
 
     /**
-     * When an Asteroid collides with an AsteroidDestroyer, it expires.
+     * When an Asteroid collides with an AsteroidDestroyer: When a large asteroid collides with a bullet or a ship, the
+     * asteroid splits into two medium asteroids. When a medium asteroid collides, it splits into two small asteroids.
+     * When a small asteroid collides, it disappears.
      */
     @Override
     public void collidedWith (Participant p)
@@ -146,9 +148,24 @@ public class Asteroid extends Participant
         {
             // Expire the asteroid
             Participant.expire(this);
-
+            Participant.expire(p);
             // Inform the controller
             controller.asteroidDestroyed();
+
+            if (size == 2)
+            {
+                controller.addParticipant(new Asteroid(RANDOM.nextInt(3), 1, p.getX(), p.getY(), 2, controller));
+                controller.addParticipant(new Asteroid(RANDOM.nextInt(3), 1, p.getX(), p.getY(), 2, controller));
+            }
+            // else if medium asteroid, splits into 2 small asteroids
+            else if (size == 1)
+            {
+                controller.addParticipant(new Asteroid(RANDOM.nextInt(3), 0, p.getX(), p.getY(), 2, controller));
+                controller.addParticipant(new Asteroid(RANDOM.nextInt(3), 0, p.getX(), p.getY(), 2, controller));
+            }
+
+            // else (if a small asteroid) it will disappear
+
         }
     }
 }
