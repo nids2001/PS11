@@ -84,7 +84,7 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
     {
         // Clear the screen, reset the level, and display the legend
         clear();
-        display.setLegend("ASTEROIDS");
+        display.setLegend("the Game");
 
         // Place four asteroids near the corners of the screen.
         placeAsteroids();
@@ -167,6 +167,7 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
     public void addParticipant (Participant p)
     {
         pstate.addParticipant(p);
+        //display.refresh();
     }
 
     /**
@@ -281,8 +282,6 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
             ship.setTurning("left", true);
         if (e.getKeyCode() == KeyEvent.VK_LEFT && ship != null)
             ship.setTurning("right", true);
-        if (e.getKeyCode() == KeyEvent.VK_UP && ship != null)
-            ship.setAccelerating(true);
         if (e.getKeyCode() == KeyEvent.VK_SPACE && !pstate.isBulletMaxed())
             pstate.addParticipant(new Bullet(ship.getXNose(), ship.getYNose(), ship.getRotation(), SPEED_LIMIT+5, this));
     }
@@ -299,7 +298,5 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
             ship.setTurning("left", false);
         if (e.getKeyCode() == KeyEvent.VK_LEFT && ship != null)
             ship.setTurning("right", false);
-        if (e.getKeyCode() == KeyEvent.VK_UP && ship != null)
-            ship.setAccelerating(false);
     }
 }
