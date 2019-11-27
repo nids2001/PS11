@@ -11,7 +11,7 @@ import asteroids.game.Participant;
 /**
  * Represents asteroids
  */
-public class Asteroid extends Participant
+public class Asteroid extends Participant implements ShipDestroyer
 {
     /** The size of the asteroid (0 = small, 1 = medium, 2 = large) */
     private int size;
