@@ -167,6 +167,7 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
     public void addParticipant (Participant p)
     {
         pstate.addParticipant(p);
+        //display.refresh();
     }
 
     /**
