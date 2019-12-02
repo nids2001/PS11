@@ -4,11 +4,12 @@ import static asteroids.game.Constants.RANDOM;
 import java.awt.Shape;
 import java.awt.geom.Path2D;
 import asteroids.destroyers.AsteroidDestroyer;
+import asteroids.destroyers.ShipDestroyer;
 import asteroids.game.Controller;
 import asteroids.game.Participant;
 import asteroids.game.ParticipantCountdownTimer;
 
-public class Mine extends Participant implements AsteroidDestroyer
+public class Mine extends Participant implements AsteroidDestroyer, ShipDestroyer
 {
     private Shape outline;
     private Controller controller;

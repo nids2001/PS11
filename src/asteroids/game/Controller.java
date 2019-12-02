@@ -116,10 +116,10 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
      */
     private void placeAsteroids ()
     {
-        addParticipant(new Asteroid(0, 0, EDGE_OFFSET, EDGE_OFFSET, 3, this));
-        addParticipant(new Asteroid(0, 1, EDGE_OFFSET, EDGE_OFFSET, 3, this));
-        addParticipant(new Asteroid(0, 1, EDGE_OFFSET, EDGE_OFFSET, 3, this));
-        addParticipant(new Asteroid(0, 2, EDGE_OFFSET, EDGE_OFFSET, 3, this));
+        addParticipant(new Asteroid(RANDOM.nextInt(4), 2, RANDOM.nextInt(EDGE_OFFSET), RANDOM.nextInt(EDGE_OFFSET), this));
+        addParticipant(new Asteroid(RANDOM.nextInt(4), 2, 750 - RANDOM.nextInt(EDGE_OFFSET), RANDOM.nextInt(EDGE_OFFSET), this));
+        addParticipant(new Asteroid(RANDOM.nextInt(4), 2, RANDOM.nextInt(EDGE_OFFSET), 750 - RANDOM.nextInt(EDGE_OFFSET), this));
+        addParticipant(new Asteroid(RANDOM.nextInt(4), 2, 750 - RANDOM.nextInt(EDGE_OFFSET), 750 - RANDOM.nextInt(EDGE_OFFSET), this));
     }
 
     /**
@@ -146,9 +146,9 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
         // Place the ship
         placeShip();
         
-        //place mines
-        addParticipant(new Mine(50,80,1.0, Math.PI/4, this));
-        addParticipant(new Mine(80, 430, 2.0, Math.PI/8, this));
+//        //place mines
+//        addParticipant(new Mine(50,80,1.0, Math.PI/4, this));
+//        addParticipant(new Mine(80, 430, 2.0, Math.PI/8, this));
 
         // Reset statistics
         lives = 1;
@@ -167,7 +167,6 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
     public void addParticipant (Participant p)
     {
         pstate.addParticipant(p);
-        //display.refresh();
     }
 
     /**
@@ -278,13 +277,13 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
     @Override
     public void keyPressed (KeyEvent e)
     {
-        if (e.getKeyCode() == KeyEvent.VK_RIGHT && ship != null)
+        if ((e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_D) && ship != null)
             ship.setTurning("left", true);
-        if (e.getKeyCode() == KeyEvent.VK_LEFT && ship != null)
+        if ((e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_A) && ship != null)
             ship.setTurning("right", true);
-        if (e.getKeyCode() == KeyEvent.VK_UP && ship != null)
+        if ((e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_W) && ship != null)
             ship.setAccelerating(true);
-        if (e.getKeyCode() == KeyEvent.VK_SPACE && !pstate.isBulletMaxed())
+        if ((e.getKeyCode() == KeyEvent.VK_SPACE || e.getKeyCode() == KeyEvent.VK_S || e.getKeyCode() == KeyEvent.VK_DOWN) && !pstate.isBulletMaxed())
             pstate.addParticipant(new Bullet(ship.getXNose(), ship.getYNose(), ship.getRotation(), SPEED_LIMIT+5, this));
     }
 

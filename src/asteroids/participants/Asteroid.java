@@ -29,7 +29,7 @@ public class Asteroid extends Participant implements ShipDestroyer
      * positions it at the provided coordinates with a random rotation. Its velocity has the given speed but is in a
      * random direction.
      */
-    public Asteroid (int variety, int size, double x, double y, int speed, Controller controller)
+    public Asteroid (int variety, int size, double x, double y, Controller controller)
     {
         // Make sure size and variety are valid
         if (size < 0 || size > 2)
@@ -45,8 +45,28 @@ public class Asteroid extends Participant implements ShipDestroyer
         this.controller = controller;
         this.size = size;
         setPosition(x, y);
-        setVelocity(speed, RANDOM.nextDouble() * 2 * Math.PI);
+
+        // Sets the speed of the asteroid depending on the size. There are three speed limits for asteroids: slow,
+        // medium, and fast. A large-sized asteroid always has the slow speed. A medium-sized asteroid has a randomly
+        // chosen speed that lies between slow and medium. A small-size asteroid has a randomly chosen speed that lies
+        // between slow and fast.
+        if (size == 2)
+        {
+            setVelocity(MAX_L_ASTEROID_SPEED, RANDOM.nextDouble() * 2 * Math.PI);
+        }
+        if (size == 1)
+        {
+            setVelocity(MAX_M_ASTEROID_SPEED + (MAX_L_ASTEROID_SPEED - MAX_M_ASTEROID_SPEED) * RANDOM.nextDouble(), RANDOM.nextDouble() * 2 * Math.PI);
+        }
+        if (size == 0)
+        {
+            setVelocity(MAX_S_ASTEROID_SPEED + (MAX_M_ASTEROID_SPEED - MAX_S_ASTEROID_SPEED) * RANDOM.nextDouble(), RANDOM.nextDouble() * 2 * Math.PI);
+        }
+        
+        //randomly sets the rotation of the asteroid
         setRotation(2 * Math.PI * RANDOM.nextDouble());
+        
+        //creates shape outline
         createAsteroidOutline(variety, size);
     }
 
@@ -149,19 +169,20 @@ public class Asteroid extends Participant implements ShipDestroyer
             // Expire the asteroid
             Participant.expire(this);
             Participant.expire(p);
+            
             // Inform the controller
             controller.asteroidDestroyed();
 
             if (size == 2)
             {
-                controller.addParticipant(new Asteroid(RANDOM.nextInt(3), 1, p.getX(), p.getY(), 2, controller));
-                controller.addParticipant(new Asteroid(RANDOM.nextInt(3), 1, p.getX(), p.getY(), 2, controller));
+                controller.addParticipant(new Asteroid(RANDOM.nextInt(3), 1, p.getX(), p.getY(), controller));
+                controller.addParticipant(new Asteroid(RANDOM.nextInt(3), 1, p.getX(), p.getY(), controller));
             }
             // else if medium asteroid, splits into 2 small asteroids
             else if (size == 1)
             {
-                controller.addParticipant(new Asteroid(RANDOM.nextInt(3), 0, p.getX(), p.getY(), 2, controller));
-                controller.addParticipant(new Asteroid(RANDOM.nextInt(3), 0, p.getX(), p.getY(), 2, controller));
+                controller.addParticipant(new Asteroid(RANDOM.nextInt(3), 0, p.getX(), p.getY(), controller));
+                controller.addParticipant(new Asteroid(RANDOM.nextInt(3), 0, p.getX(), p.getY(), controller));
             }
 
             // else (if a small asteroid) it will disappear
