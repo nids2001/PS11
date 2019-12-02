@@ -137,7 +137,9 @@ public class Asteroid extends Participant implements ShipDestroyer
     }
 
     /**
-     * When an Asteroid collides with an AsteroidDestroyer, it expires.
+     * When an Asteroid collides with an AsteroidDestroyer: When a large asteroid collides with a bullet or a ship, the
+     * asteroid splits into two medium asteroids. When a medium asteroid collides, it splits into two small asteroids.
+     * When a small asteroid collides, it disappears.
      */
     @Override
     public void collidedWith (Participant p)
