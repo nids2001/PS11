@@ -123,17 +123,17 @@ public class Constants
     /**
      * Maximum speed of large asteroid
      */
-    public final static int MAXIMUM_LARGE_ASTEROID_SPEED = 3;
+    public final static int MAX_L_ASTEROID_SPEED = 3;
     
     /**
      * Maximum speed of medium asteroid
      */
-    public final static int MAXIMUM_MEDIUM_ASTEROID_SPEED = 5;
+    public final static int MAX_M_ASTEROID_SPEED = 5;
     
     /**
      * Maximum speed of small asteroid
      */
-    public final static int MAXIMUM_SMALL_ASTEROID_SPEED = 8;
+    public final static int MAX_S_ASTEROID_SPEED = 8;
     
     /**
      * Offset of score/level from left/right side.
