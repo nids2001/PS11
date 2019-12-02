@@ -64,7 +64,7 @@ public class ParticipantState implements Iterable<Participant>
                 bulletCount++;
         }
         
-        if (bulletCount >= 8)
+        if (bulletCount >= 3)
             bulletsMaxed = true;
         else
             bulletsMaxed = false;
