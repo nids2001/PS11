@@ -18,7 +18,7 @@ public class Ship extends Participant implements AsteroidDestroyer
 
     /** Game controller */
     private Controller controller;
-    private boolean turningLeft, turningRight;
+    private boolean turningLeft, turningRight, accelerating;
 
     /**
      * Constructs a ship at the specified coordinates that is pointed in the given direction.
@@ -38,10 +38,10 @@ public class Ship extends Participant implements AsteroidDestroyer
         poly.closePath();
         outline = poly;
         
-        turningLeft = turningRight = false;
+        turningLeft = turningRight = accelerating = false;
 
         // Schedule an acceleration in two seconds
-        new ParticipantCountdownTimer(this, "move", 2000);
+//        new ParticipantCountdownTimer(this, "move", 2000);
     }
 
     /**
@@ -76,6 +76,8 @@ public class Ship extends Participant implements AsteroidDestroyer
     @Override
     public void move ()
     {
+        if (accelerating)
+            this.accelerate();
         applyFriction(SHIP_FRICTION);
         this.turn();
         super.move();
@@ -105,6 +107,35 @@ public class Ship extends Participant implements AsteroidDestroyer
         if (s.equals("right"))
             turningRight =b;
     }
+    
+    public void setAccelerating(boolean b)
+    {
+        accelerating = b;
+        if (b) {
+            Path2D.Double poly = new Path2D.Double();
+            poly.moveTo(21, 0);
+            poly.lineTo(-21, 12);
+            poly.lineTo(-14, 10);
+            poly.lineTo(-14, -10);
+            poly.lineTo(-14, -5);
+            poly.lineTo(-25,0);
+            poly.lineTo(-14, 5);
+            poly.lineTo(-14, 10);
+            poly.lineTo(-14, -10);
+            poly.lineTo(-21, -12);
+            poly.closePath();
+            outline = poly;
+        } else {
+            Path2D.Double poly = new Path2D.Double();
+            poly.moveTo(21, 0);
+            poly.lineTo(-21, 12);
+            poly.lineTo(-14, 10);
+            poly.lineTo(-14, -10);
+            poly.lineTo(-21, -12);
+            poly.closePath();
+            outline = poly;
+        }
+    }
 
     /**
      * Accelerates by SHIP_ACCELERATION
@@ -112,7 +143,6 @@ public class Ship extends Participant implements AsteroidDestroyer
     public void accelerate ()
     {
         accelerate(SHIP_ACCELERATION);
-        
     }
 
     /**
