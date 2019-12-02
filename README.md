@@ -2,19 +2,19 @@
 Final Project for CS 1410 - Fall 2019
 
 
-- [ ] The splash screen and the initial screen have four asteroids.
+- [x] The splash screen and the initial screen have four asteroids.
 
 - [ ] There is a on-screen display showing lives remaining, level, and score.  The ship gets three lives initially.
 
-- [ ] The ship does not move autonomously.  Instead, you can accelerate it in the direction it is pointing with the up-arrow or W key.  There is a maximum speed to which a ship can accelerate.
+- [x] The ship does not move autonomously.  Instead, you can accelerate it in the direction it is pointing with the up-arrow or W key.  There is a maximum speed to which a ship can accelerate.
 
-- [ ] You can turn left with either the left-arrow or A key.  You can turn right with either the right-arrow or D key.
+- [x] You can turn left with either the left-arrow or A key.  You can turn right with either the right-arrow or D key.
 
-- [ ] When you accelerate the ship, a small flame is animated.
+- [x] When you accelerate the ship, a small flame is animated.
 
-- [ ] You can fire bullets by pressing the down-arrow, S, or space key.  There can be at most eight bullets flying around at any given time.  A bullet disappears when it hits something or when it has reached its maximum range.
+- [x] You can fire bullets by pressing the down-arrow, S, or space key.  There can be at most eight bullets flying around at any given time.  A bullet disappears when it hits something or when it has reached its maximum range.
 
-- [ ] When a large asteroid collides with a bullet or a ship, the asteroid splits into two medium asteroids.  When a medium asteroid collides, it splits into two small asteroids.  When a small asteroid collides, it disappears.
+- [x] When a large asteroid collides with a bullet or a ship, the asteroid splits into two medium asteroids.  When a medium asteroid collides, it splits into two small asteroids.  When a small asteroid collides, it disappears.
 
 - [ ] Transient "dust" appears briefly when an asteroid splits or disappears.
 
