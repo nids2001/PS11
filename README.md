@@ -22,7 +22,7 @@ Final Project for CS 1410 - Fall 2019
 
 - [ ] The game score goes up by 20 points when a large asteroid splits, by 50 points when a medium asteroid splits, and by 100 points when a small asteroid disappears.
 
-- [ ] At the beginning of the game, four large asteroids are placed in the vicinity of the four corners of the screen.  The exact position is randomly chosen, as is the rotation and direction of the asteroid.  There are three speed limits for asteroids: slow, medium, and fast.  A large-sized asteroid always has the slow speed.  A medium-sized asteroid has a randomly chosen speed that lies between slow and medium.  A small-size asteroid has a randomly chosen speed that lies between slow and fast.
+- [x] At the beginning of the game, four large asteroids are placed in the vicinity of the four corners of the screen.  The exact position is randomly chosen, as is the rotation and direction of the asteroid.  There are three speed limits for asteroids: slow, medium, and fast.  A large-sized asteroid always has the slow speed.  A medium-sized asteroid has a randomly chosen speed that lies between slow and medium.  A small-size asteroid has a randomly chosen speed that lies between slow and fast.
 
 - [ ] Each time a new level is reached (i.e., each time all the asteroids on the screen are destroyed), new large asteroids appear.  The number of these large asteroids increases by one from the previous level.  At the beginning of the game, there are four large asteroids; at level 2, there are five; at level 3, there are six; and so on.
 
