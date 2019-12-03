@@ -3,6 +3,7 @@ package asteroids.game;
 import static asteroids.game.Constants.*;
 import java.awt.*;
 import javax.swing.*;
+import asteroids.participants.Ship;
 
 /**
  * The area of the display in which the game takes place.
@@ -52,15 +53,34 @@ public class Screen extends JPanel
 
         // Do the default painting
         super.paintComponent(g);
+        
+        // Draw the legend across the middle of the panel
+        g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 120));
+        int size = g.getFontMetrics().stringWidth(legend);
+        g.drawString(legend, (SIZE - size) / 2, SIZE / 2);
 
         // Draw each participant in its proper place
         for (Participant p: controller)
         {
             p.draw(g);
         }
-
-        // Draw the legend across the middle of the panel
-        int size = g.getFontMetrics().stringWidth(legend);
-        g.drawString(legend, (SIZE - size) / 2, SIZE / 2);
+        
+        // showing the level, lifecount, and score in corners
+        if (!legend.equals("ASTEROIDS")) {
+            g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 40));
+            g.drawString("" + controller.getLevel(), SIZE - 40, 40);
+            g.drawString("" + controller.getScore(), 10, 40);
+            
+            // Drawing life count
+            g.translate(0, 70);
+            g.rotate(-Math.PI * .5);
+            for (int i = 0; i < controller.getLives(); i++) {
+                g.translate(0, 30);
+                g.draw(Ship.createOutline());
+            }
+            
+        }
+        
+        
     }
 }

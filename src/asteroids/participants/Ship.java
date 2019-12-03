@@ -28,15 +28,8 @@ public class Ship extends Participant implements AsteroidDestroyer
         this.controller = controller;
         setPosition(x, y);
         setRotation(direction);
-
-        Path2D.Double poly = new Path2D.Double();
-        poly.moveTo(21, 0);
-        poly.lineTo(-21, 12);
-        poly.lineTo(-14, 10);
-        poly.lineTo(-14, -10);
-        poly.lineTo(-21, -12);
-        poly.closePath();
-        outline = poly;
+        
+        outline = createOutline();
         
         turningLeft = turningRight = accelerating = false;
 
@@ -45,6 +38,21 @@ public class Ship extends Participant implements AsteroidDestroyer
         controller.sounds.playSound("beat1");
     }
 
+    /**
+     * Creates outline
+     */
+    public static Shape createOutline()
+    {
+        Path2D.Double poly = new Path2D.Double();
+        poly.moveTo(21, 0);
+        poly.lineTo(-21, 12);
+        poly.lineTo(-14, 10);
+        poly.lineTo(-14, -10);
+        poly.lineTo(-21, -12);
+        poly.closePath();
+        return poly;
+    }
+    
     /**
      * Returns the x-coordinate of the point on the screen where the ship's nose is located.
      */
@@ -127,14 +135,7 @@ public class Ship extends Participant implements AsteroidDestroyer
             poly.closePath();
             outline = poly;
         } else {
-            Path2D.Double poly = new Path2D.Double();
-            poly.moveTo(21, 0);
-            poly.lineTo(-21, 12);
-            poly.lineTo(-14, 10);
-            poly.lineTo(-14, -10);
-            poly.lineTo(-21, -12);
-            poly.closePath();
-            outline = poly;
+            outline = createOutline();
         }
     }
 
