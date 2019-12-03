@@ -42,6 +42,7 @@ public class Ship extends Participant implements AsteroidDestroyer
 
         // Schedule a boop every second
         new ParticipantCountdownTimer(this, "boop", 1000);
+        controller.sounds.playSound("beat1");
     }
 
     /**
@@ -169,10 +170,10 @@ public class Ship extends Participant implements AsteroidDestroyer
     {
         // Either a beep or a boop every second
         if (payload.equals("boop")) {
-            controller.sounds.playSound("beat1");
+            controller.sounds.playSound("beat2");
             new ParticipantCountdownTimer(this, "beep", 1000);
         } else if (payload.equals("beep")) {
-            controller.sounds.playSound("beat2");
+            controller.sounds.playSound("beat1");
             new ParticipantCountdownTimer(this,"boop", 1000);
         }
     }
