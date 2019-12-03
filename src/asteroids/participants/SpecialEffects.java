@@ -1,13 +1,12 @@
-package asteroids.game;
-
+package asteroids.participants;
 
 import static asteroids.game.Constants.RANDOM;
 import static asteroids.game.Constants.SHIP_HEIGHT;
 import static asteroids.game.Constants.SHIP_WIDTH;
 import java.awt.Shape;
 import java.awt.geom.Point2D;
-import asteroids.participants.DustParticle;
-import asteroids.participants.Ship;
+import asteroids.game.Controller;
+import asteroids.game.Participant;
 
 public class SpecialEffects
 {
@@ -48,9 +47,9 @@ public class SpecialEffects
             // line3 = new DustParticle(RANDOM.nextInt(RANGE/2) + p.getX(), RANDOM.nextInt(RANGE/2) + p.getY(),
             // SHIP_WIDTH);
             
-            line1 = new DustParticle(cont.getShip().getXNose(), cont.getShip().getYNose(), SHIP_HEIGHT);
-            line2 = new DustParticle(cont.getShip().getXNose(), cont.getShip().getYNose(), SHIP_HEIGHT);
-            line3 = new DustParticle(cont.getShip().getXNose(), cont.getShip().getYNose(), SHIP_WIDTH);
+            line1 = new DustParticle(cont.getShip().getX()-20, cont.getShip().getY()-20, SHIP_HEIGHT);
+            line2 = new DustParticle(cont.getShip().getX()-20, cont.getShip().getY()-20, SHIP_HEIGHT);
+            line3 = new DustParticle(cont.getShip().getX()-20, cont.getShip().getY()-20, SHIP_WIDTH);
 
             line1.setRotation(RANDOM.nextDouble() * 2 * Math.PI);
             line2.setRotation(RANDOM.nextDouble() * 2 * Math.PI);

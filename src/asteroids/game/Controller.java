@@ -182,7 +182,7 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
     public void shipDestroyed ()
     {
         // Null out the ship
-        //ship = null;
+        ship = null;
 
         // Display a legend
         display.setLegend("Ouch!");
