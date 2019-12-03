@@ -26,7 +26,7 @@ Final Project for CS 1410 - Fall 2019
 
 - [ ] Each time a new level is reached (i.e., each time all the asteroids on the screen are destroyed), new large asteroids appear.  The number of these large asteroids increases by one from the previous level.  At the beginning of the game, there are four large asteroids; at level 2, there are five; at level 3, there are six; and so on.
 
-- [ ] Ship rotation and thruster firing work smoothly in the complete game.  The controls in the stripped-down game are very awkward by comparison.
+- [x] Ship rotation and thruster firing work smoothly in the complete game.  The controls in the stripped-down game are very awkward by comparison.
 
 - [ ] At level 2, a medium size alien ship appears 5-10 seconds after the level begins.  It follows a zig-zag path, periodically firing bullets in random directions.  It starts off screen and goes in a direction either left-to-right or right-to-left across the screen.  It randomly zig-zags in three directions: either perfectly horizontal, or at a slight angle one radian upward or downward from horizontal.  When it is destroyed, you earn 200 points.  About 5-10 seconds later, it appears again.
 
