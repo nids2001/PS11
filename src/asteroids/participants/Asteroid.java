@@ -164,8 +164,7 @@ public class Asteroid extends Participant implements ShipDestroyer
     @Override
     public void collidedWith (Participant p)
     {
-        if (p instanceof AsteroidDestroyer)
-        {
+        if (p instanceof AsteroidDestroyer) {
             // Expire the asteroid
             Participant.expire(this);
             Participant.expire(p);
@@ -173,16 +172,18 @@ public class Asteroid extends Participant implements ShipDestroyer
             // Inform the controller
             controller.asteroidDestroyed();
 
-            if (size == 2)
-            {
+            if (size == 2) {
                 controller.addParticipant(new Asteroid(RANDOM.nextInt(3), 1, p.getX(), p.getY(), controller));
                 controller.addParticipant(new Asteroid(RANDOM.nextInt(3), 1, p.getX(), p.getY(), controller));
+                controller.sounds.playSound("bangLarge");
             }
             // else if medium asteroid, splits into 2 small asteroids
-            else if (size == 1)
-            {
+            else if (size == 1) {
                 controller.addParticipant(new Asteroid(RANDOM.nextInt(3), 0, p.getX(), p.getY(), controller));
                 controller.addParticipant(new Asteroid(RANDOM.nextInt(3), 0, p.getX(), p.getY(), controller));
+                controller.sounds.playSound("bangMedium");
+            } else {
+                controller.sounds.playSound("bangSmall");
             }
 
             // else (if a small asteroid) it will disappear

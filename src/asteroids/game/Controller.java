@@ -7,6 +7,7 @@ import javax.swing.*;
 import asteroids.participants.Asteroid;
 import asteroids.participants.Bullet;
 import asteroids.participants.Ship;
+import sounds.Sounds;
 import asteroids.participants.Mine;
 
 /**
@@ -22,6 +23,9 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
 
     /** When this timer goes off, it is time to refresh the animation */
     private Timer refreshTimer;
+    
+    /** Sound player */
+    public Sounds sounds;
 
     /**
      * The time at which a transition to a new stage of the game should be made. A transition is scheduled a few seconds
@@ -52,6 +56,9 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
 
         // Record the display object
         display = new Display(this);
+        
+        // Load sound files
+        sounds = new Sounds();
 
         // Bring up the splash screen and start the refresh timer
         splashScreen();
@@ -182,6 +189,10 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
 
         // Decrement lives
         lives--;
+        
+        // Play destruction sound (and end thrust sound if it's running)
+        sounds.stopSound("thrust");
+        sounds.playSound("bangShip");
 
         // Since the ship was destroyed, schedule a transition
         scheduleTransition(END_DELAY);
@@ -191,7 +202,7 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
      * An asteroid has been destroyed
      */
     public void asteroidDestroyed ()
-    {
+    {   
         // If all the asteroids are gone, schedule a transition
         if (countAsteroids() == 0)
         {
@@ -281,10 +292,13 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
             ship.setTurning("left", true);
         if ((e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_A) && ship != null)
             ship.setTurning("right", true);
-        if ((e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_W) && ship != null)
+        if ((e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_W) && ship != null) {
             ship.setAccelerating(true);
-        if ((e.getKeyCode() == KeyEvent.VK_SPACE || e.getKeyCode() == KeyEvent.VK_S || e.getKeyCode() == KeyEvent.VK_DOWN) && !pstate.isBulletMaxed())
+            sounds.playSound("thrust");
+        }
+        if ((e.getKeyCode() == KeyEvent.VK_SPACE || e.getKeyCode() == KeyEvent.VK_S || e.getKeyCode() == KeyEvent.VK_DOWN) && !pstate.isBulletMaxed()) {
             pstate.addParticipant(new Bullet(ship.getXNose(), ship.getYNose(), ship.getRotation(), SPEED_LIMIT+5, this));
+        }
     }
 
     @Override
@@ -299,7 +313,9 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
             ship.setTurning("left", false);
         if (e.getKeyCode() == KeyEvent.VK_LEFT && ship != null)
             ship.setTurning("right", false);
-        if (e.getKeyCode() == KeyEvent.VK_UP && ship != null)
+        if (e.getKeyCode() == KeyEvent.VK_UP && ship != null) {
             ship.setAccelerating(false);
+            sounds.stopSound("thrust");
+        }
     }
 }

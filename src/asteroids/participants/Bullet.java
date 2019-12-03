@@ -31,6 +31,7 @@ public class Bullet extends Participant implements AsteroidDestroyer
         Path2D.Double poly = new Path2D.Double();
         poly.append(new Ellipse2D.Double(-2,-2, 4, 4), true);
         outline = poly;
+        controller.sounds.playSound("fire");
     }
     
     @Override
