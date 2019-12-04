@@ -40,8 +40,9 @@ public class Ship extends Participant implements AsteroidDestroyer
         
         turningLeft = turningRight = accelerating = false;
 
-        // Schedule an acceleration in two seconds
-//        new ParticipantCountdownTimer(this, "move", 2000);
+        // Schedule a boop every second
+        new ParticipantCountdownTimer(this, "boop", 1000);
+        controller.sounds.playSound("beat1");
     }
 
     /**
@@ -153,9 +154,13 @@ public class Ship extends Participant implements AsteroidDestroyer
     {
         if (p instanceof ShipDestroyer)
         {
+            //new SpecialEffects(this, controller);
+            
             // Expire the ship from the game
             Participant.expire(this);
 
+            
+            
             // Tell the controller the ship was destroyed
             controller.shipDestroyed();
         }
@@ -167,12 +172,13 @@ public class Ship extends Participant implements AsteroidDestroyer
     @Override
     public void countdownComplete (Object payload)
     {
-        // Give a burst of acceleration, then schedule another
-        // burst for 200 msecs from now.
-        if (payload.equals("move"))
-        {
-            accelerate();
-            new ParticipantCountdownTimer(this, "move", 200);
+        // Either a beep or a boop every second
+        if (payload.equals("boop")) {
+            controller.sounds.playSound("beat2");
+            new ParticipantCountdownTimer(this, "beep", 1000);
+        } else if (payload.equals("beep")) {
+            controller.sounds.playSound("beat1");
+            new ParticipantCountdownTimer(this,"boop", 1000);
         }
     }
 }
