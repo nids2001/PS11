@@ -32,3 +32,24 @@ Final Project for CS 1410 - Fall 2019
 - [ ] At level 3 and above, the medium alien ship stops appearing and the small alien ship appears instead. The small alien ship zig-zags the same as the medium alien ship, but moves faster and fires bullets toward the ship. (Specifically, it fires in a randomly chosen direction that is within five degrees of the direction of the center of the ship.) Its destruction earns you 1000 points. **(NIDHI)**
 
 - [x] There are complete sound effects. **(GRANT)**
+
+-------------------------------------------------------------------------------------------------------------------------------------
+
+# EC-11
+Final Project EC for CS 1410 - Fall 2019
+
+- Extra lives earned by points or level reached [2 points]
+
+- Cool design of alien ship/bullets [4 points]
+
+- Cool ship redesign [4 points]
+
+- **?** Asteroids bounce when they collide with each other [6 points]
+
+- Highest score for current session displayed on screen [4 points]
+
+- **?** Objects on screen with different colors per object [4 points]
+
+- Two or more players (must have full stats and controls for each) [20 points]
+
+- Additional keys programmed for normal play [2 points]
