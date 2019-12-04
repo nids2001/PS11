@@ -12,8 +12,10 @@ import sounds.Sounds;
 /**
  * Controls a game of Asteroids.
  */
-public class Controller implements KeyListener, ActionListener, Iterable<Participant>
+public class Controller implements ActionListener, Iterable<Participant>
 {
+    private boolean ENHANCED;
+    
     /** The state of all the Participants */
     private ParticipantState pstate;
 
@@ -25,7 +27,9 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
     
     /** Sound player */
     public Sounds sounds;
-
+    
+    private AsteroidsKeyListener keyListener;
+    
     /**
      * The time at which a transition to a new stage of the game should be made. A transition is scheduled a few seconds
      * in the future to give the user time to see what has happened before doing something like going to a new level or
@@ -36,15 +40,27 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
     /** Number of lives left */
     private int lives, score, level;
     private int scoreMemory;
+    private int highScore;
 
     /** The game display */
     private Display display;
 
     /**
      * Constructs a controller to coordinate the game and screen
+     * 
+     * @param enhanced whether or not entering enhanced mode
      */
-    public Controller ()
+    public Controller (boolean enhanced)
     {
+        // Determining whether or not the gamemode is enhanced
+        if (enhanced)
+            ENHANCED = true;
+        else
+            ENHANCED = false;
+        
+        highScore = 0;
+        keyListener = new AsteroidsKeyListener(this);
+        
         // Initialize the ParticipantState
         pstate = new ParticipantState();
 
@@ -101,11 +117,35 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
     }
     
     /**
+     * Returns high score
+     */
+    public int getHighScore ()
+    {
+        return highScore;
+    }
+    
+    /**
      * Returns score
      */
     public int getLevel ()
     {
         return level;
+    }
+    
+    /**
+     * Returns pstate
+     */
+    public ParticipantState getPState ()
+    {
+        return pstate;
+    }
+    
+    /**
+     * Returns enhanced
+     */
+    public boolean getEnhanced ()
+    {
+        return ENHANCED;
     }
 
     /**
@@ -126,8 +166,10 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
      */
     private void finalScreen ()
     {
+        if (score > highScore)
+            highScore = score;
         display.setLegend(GAME_OVER);
-        display.removeKeyListener(this);
+        display.removeKeyListener(keyListener);
     }
 
     /**
@@ -139,7 +181,7 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
         Participant.expire(ship);
         ship = new Ship(SIZE / 2, SIZE / 2, -Math.PI / 2, this);
         addParticipant(ship);
-        display.addKeyListener(this);
+        display.addKeyListener(keyListener);
     }
 
     /**
@@ -188,10 +230,12 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
         lives = 3;
         score = 0;
         level = 1;
+        // Clear the transition time
+        transitionTime = Long.MAX_VALUE;
 
         // Start listening to events (but don't listen twice)
-        display.removeKeyListener(this);
-        display.addKeyListener(this);
+        display.removeKeyListener(keyListener);
+        display.addKeyListener(keyListener);
 
         // Give focus to the game screen
         display.requestFocusInWindow();
@@ -220,7 +264,7 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
      */
     public void shipDestroyed ()
     {
-        display.removeKeyListener(this);
+        display.removeKeyListener(keyListener);
         // Decrement lives
         lives--;
         
@@ -269,7 +313,7 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
         else if (e.getSource() == refreshTimer)
         {
             // It may be time to gain a life
-            if (score - scoreMemory > 1000) {
+            if (ENHANCED && (score - scoreMemory > 1000)) {
                 lives++;
                 scoreMemory = (score / 1000) * 1000;
             }
@@ -325,41 +369,5 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
         return count;
     }
 
-    /**
-     * If a key of interest is pressed, record that it is down.
-     */
-    @Override
-    public void keyPressed (KeyEvent e)
-    {
-        if ((e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_D) && ship != null)
-            ship.setTurning("left", true);
-        if ((e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_A) && ship != null)
-            ship.setTurning("right", true);
-        if ((e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_W) && ship != null){
-            ship.setAccelerating(true);
-            sounds.playSound("thrust");
-        }
-        if ((e.getKeyCode() == KeyEvent.VK_SPACE || e.getKeyCode() == KeyEvent.VK_S || e.getKeyCode() == KeyEvent.VK_DOWN)
-                && !pstate.isBulletMaxed() && ship != null) {
-            pstate.addParticipant(new Bullet(ship.getXNose(), ship.getYNose(), ship.getRotation(), SPEED_LIMIT+5, this));
-        }
-    }
-
-    @Override
-    public void keyTyped (KeyEvent e)
-    {
-    }
-
-    @Override
-    public void keyReleased (KeyEvent e)
-    {
-        if (e.getKeyCode() == KeyEvent.VK_RIGHT && ship != null)
-            ship.setTurning("left", false);
-        if (e.getKeyCode() == KeyEvent.VK_LEFT && ship != null)
-            ship.setTurning("right", false);
-        if (e.getKeyCode() == KeyEvent.VK_UP && ship != null) {
-            ship.setAccelerating(false);
-            sounds.stopSound("thrust");
-        }
-    }
+    
 }
