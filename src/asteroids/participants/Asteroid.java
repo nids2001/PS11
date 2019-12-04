@@ -7,6 +7,7 @@ import asteroids.destroyers.AsteroidDestroyer;
 import asteroids.destroyers.ShipDestroyer;
 import asteroids.game.Controller;
 import asteroids.game.Participant;
+import asteroids.game.SpecialEffects;
 
 /**
  * Represents asteroids
@@ -168,7 +169,6 @@ public class Asteroid extends Participant implements ShipDestroyer
         if (p instanceof AsteroidDestroyer)
         {
             new SpecialEffects(p, controller);
-
             // Expire the asteroid
             Participant.expire(this);
             Participant.expire(p);
