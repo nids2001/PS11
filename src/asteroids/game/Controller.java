@@ -219,9 +219,6 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
      */
     public void shipDestroyed ()
     {
-        // Null out the ship
-        ship = null;
-
         // Decrement lives
         lives--;
         
