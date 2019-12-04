@@ -7,7 +7,6 @@ import asteroids.destroyers.AsteroidDestroyer;
 import asteroids.destroyers.ShipDestroyer;
 import asteroids.game.Controller;
 import asteroids.game.Participant;
-import asteroids.game.SpecialEffects;
 
 /**
  * Represents asteroids
@@ -172,26 +171,29 @@ public class Asteroid extends Participant implements ShipDestroyer
             // Expire the asteroid
             Participant.expire(this);
             Participant.expire(p);
-            
-            
-            // Inform the controller
-            controller.asteroidDestroyed();
 
             if (size == 2) {
                 controller.addParticipant(new Asteroid(RANDOM.nextInt(3), 1, p.getX(), p.getY(), controller));
                 controller.addParticipant(new Asteroid(RANDOM.nextInt(3), 1, p.getX(), p.getY(), controller));
+                controller.addPoints(20);
                 controller.sounds.playSound("bangLarge");
             }
             // else if medium asteroid, splits into 2 small asteroids
             else if (size == 1) {
                 controller.addParticipant(new Asteroid(RANDOM.nextInt(3), 0, p.getX(), p.getY(), controller));
                 controller.addParticipant(new Asteroid(RANDOM.nextInt(3), 0, p.getX(), p.getY(), controller));
+                controller.addPoints(50);
                 controller.sounds.playSound("bangMedium");
             } else {
+                controller.addPoints(100);
                 controller.sounds.playSound("bangSmall");
             }
-
             // else (if a small asteroid) it will disappear
+            
+            // Inform the controller
+            controller.asteroidDestroyed();
+
+            
 
         }
     }

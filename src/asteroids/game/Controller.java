@@ -8,7 +8,7 @@ import asteroids.participants.Asteroid;
 import asteroids.participants.Bullet;
 import asteroids.participants.Ship;
 import sounds.Sounds;
-import asteroids.participants.Mine;
+
 
 /**
  * Controls a game of Asteroids.
@@ -35,7 +35,8 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
     private long transitionTime;
 
     /** Number of lives left */
-    private int lives;
+    private int lives, score, level;
+    private int scoreMemory;
 
     /** The game display */
     private Display display;
@@ -83,6 +84,30 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
     {
         return ship;
     }
+    
+    /**
+     * Returns lives
+     */
+    public int getLives ()
+    {
+        return lives;
+    }
+    
+    /**
+     * Returns score
+     */
+    public int getScore ()
+    {
+        return score;
+    }
+    
+    /**
+     * Returns score
+     */
+    public int getLevel ()
+    {
+        return level;
+    }
 
     /**
      * Configures the game screen to display the splash screen
@@ -94,7 +119,7 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
         display.setLegend("ASTEROIDS");
 
         // Place four asteroids near the corners of the screen.
-        placeAsteroids();
+        placeAsteroids(1);
     }
 
     /**
@@ -115,18 +140,21 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
         Participant.expire(ship);
         ship = new Ship(SIZE / 2, SIZE / 2, -Math.PI / 2, this);
         addParticipant(ship);
-        display.setLegend("");
+        display.addKeyListener(this);
     }
 
     /**
      * Places an asteroid near one corner of the screen. Gives it a random velocity and rotation.
      */
-    private void placeAsteroids ()
+    private void placeAsteroids (int level)
     {
         addParticipant(new Asteroid(RANDOM.nextInt(4), 2, RANDOM.nextInt(EDGE_OFFSET), RANDOM.nextInt(EDGE_OFFSET), this));
         addParticipant(new Asteroid(RANDOM.nextInt(4), 2, 750 - RANDOM.nextInt(EDGE_OFFSET), RANDOM.nextInt(EDGE_OFFSET), this));
         addParticipant(new Asteroid(RANDOM.nextInt(4), 2, RANDOM.nextInt(EDGE_OFFSET), 750 - RANDOM.nextInt(EDGE_OFFSET), this));
         addParticipant(new Asteroid(RANDOM.nextInt(4), 2, 750 - RANDOM.nextInt(EDGE_OFFSET), 750 - RANDOM.nextInt(EDGE_OFFSET), this));
+        
+        for (int i = 1; i < level; i++)
+            addParticipant(new Asteroid(RANDOM.nextInt(4), 2, RANDOM.nextInt(EDGE_OFFSET), RANDOM.nextInt(EDGE_OFFSET), this));
     }
 
     /**
@@ -148,7 +176,7 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
         clear();
 
         // Place asteroids
-        placeAsteroids();
+        placeAsteroids(1);
 
         // Place the ship
         placeShip();
@@ -158,7 +186,9 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
 //        addParticipant(new Mine(80, 430, 2.0, Math.PI/8, this));
 
         // Reset statistics
-        lives = 1;
+        lives = 3;
+        score = 0;
+        level = 1;
 
         // Start listening to events (but don't listen twice)
         display.removeKeyListener(this);
@@ -166,6 +196,16 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
 
         // Give focus to the game screen
         display.requestFocusInWindow();
+    }
+    
+    /**
+     * Increases score by x amount
+     * 
+     * @p x points gained
+     */
+    public void addPoints(int x)
+    {
+        score+= x;
     }
 
     /**
@@ -181,9 +221,7 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
      */
     public void shipDestroyed ()
     {
-        // Display a legend
-        display.setLegend("Ouch!");
-
+        display.removeKeyListener(this);
         // Decrement lives
         lives--;
         
@@ -231,6 +269,12 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
         // Time to refresh the screen and deal with keyboard input
         else if (e.getSource() == refreshTimer)
         {
+            // It may be time to gain a life
+            if (score - scoreMemory > 1000) {
+                lives++;
+                scoreMemory = (score / 1000) * 1000;
+            }
+            
             // It may be time to make a game transition
             performTransition();
 
@@ -254,11 +298,17 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
             // Clear the transition time
             transitionTime = Long.MAX_VALUE;
 
-            // If there are no lives left, the game is over. Show the final
-            // screen.
-            if (lives <= 0)
-            {
-                finalScreen();
+            // If there are no lives left, the game is over. Show the final screen.
+            if (lives <= 0) {
+                finalScreen();  
+            } else {
+                // Replace the ship if there are lives remaining
+                placeShip();
+                // Places new asteroids if level has increased
+                if (countAsteroids() == 0) {
+                    level++;
+                    placeAsteroids(level);
+                }
             }
         }
     }
@@ -269,12 +319,9 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
     private int countAsteroids ()
     {
         int count = 0;
-        for (Participant p : this)
-        {
+        for (Participant p : this) {
             if (p instanceof Asteroid)
-            {
                 count++;
-            }
         }
         return count;
     }
@@ -289,11 +336,12 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
             ship.setTurning("left", true);
         if ((e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_A) && ship != null)
             ship.setTurning("right", true);
-        if ((e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_W) && ship != null) {
+        if ((e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_W) && ship != null){
             ship.setAccelerating(true);
             sounds.playSound("thrust");
         }
-        if ((e.getKeyCode() == KeyEvent.VK_SPACE || e.getKeyCode() == KeyEvent.VK_S || e.getKeyCode() == KeyEvent.VK_DOWN) && !pstate.isBulletMaxed()) {
+        if ((e.getKeyCode() == KeyEvent.VK_SPACE || e.getKeyCode() == KeyEvent.VK_S || e.getKeyCode() == KeyEvent.VK_DOWN)
+                && !pstate.isBulletMaxed() && ship != null) {
             pstate.addParticipant(new Bullet(ship.getXNose(), ship.getYNose(), ship.getRotation(), SPEED_LIMIT+5, this));
         }
     }
