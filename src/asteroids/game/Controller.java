@@ -139,6 +139,7 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
         Participant.expire(ship);
         ship = new Ship(SIZE / 2, SIZE / 2, -Math.PI / 2, this);
         addParticipant(ship);
+        display.addKeyListener(this);
     }
 
     /**
@@ -219,6 +220,7 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
      */
     public void shipDestroyed ()
     {
+        display.removeKeyListener(this);
         // Decrement lives
         lives--;
         
