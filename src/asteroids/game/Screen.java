@@ -68,11 +68,11 @@ public class Screen extends JPanel
         // showing the level, lifecount, and score in corners
         if (!legend.equals("ASTEROIDS")) {
             g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 40));
-            g.drawString("" + controller.getLevel(), SIZE - 40, 40);
-            g.drawString("" + controller.getScore(), 10, 40);
+            g.drawString("" + controller.getLevel(), SIZE - 40, 45);
+            g.drawString("" + controller.getScore(), 10, 45);
             
             // Drawing life count
-            g.translate(0, 70);
+            g.translate(-10, 75);
             g.rotate(-Math.PI * .5);
             for (int i = 0; i < controller.getLives(); i++) {
                 g.translate(0, 30);
