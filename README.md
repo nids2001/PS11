@@ -15,9 +15,9 @@ Final Project for CS 1410 - Fall 2019
 
 - [x] When a large asteroid collides with a bullet or a ship, the asteroid splits into two medium asteroids. When a medium asteroid collides, it splits into two small asteroids. When a small asteroid collides, it disappears.
 
-- [ ] Transient "dust" appears briefly when an asteroid splits or disappears. **(NIDHI)**
+- [x] Transient "dust" appears briefly when an asteroid splits or disappears. **(NIDHI)**
 
-- [ ] Transient "debris" appears briefly when the ship is hit. **(NIDHI)**
+- [x] Transient "debris" appears briefly when the ship is hit. **(NIDHI)**
 
 - [x] The game score goes up by 20 points when a large asteroid splits, by 50 points when a medium asteroid splits, and by 100 points when a small asteroid disappears. **(GRANT)**
 
