@@ -3,6 +3,8 @@ package asteroids.game;
 import static asteroids.game.Constants.*;
 import java.awt.*;
 import javax.swing.*;
+import asteroids.participants.AlienShip;
+import asteroids.participants.Asteroid;
 import asteroids.participants.Ship;
 
 /**
@@ -53,23 +55,36 @@ public class Screen extends JPanel
 
         // Do the default painting
         super.paintComponent(g);
-        
+
         // Draw the legend across the middle of the panel
         g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 120));
         int size = g.getFontMetrics().stringWidth(legend);
         g.drawString(legend, (SIZE - size) / 2, SIZE / 2);
 
         // Draw each participant in its proper place
-        for (Participant p: controller)
+        for (Participant p : controller)
         {
+            if (controller.getEnhanced())
+            {
+                if (p instanceof AlienShip)
+                {
+                    g.setColor(Color.GREEN);
+                }
+                
+                if (p instanceof Asteroid) {
+                    g.setColor(Color.PINK);
+                }
+            }
             p.draw(g);
+            g.setColor(Color.WHITE);
+
         }
-        
+
         // in-game HUD
         if (!legend.equals("ASTEROIDS"))
             drawHUD(g);
     }
-    
+
     /**
      * Drawing the HUD for the game
      * 
@@ -77,24 +92,25 @@ public class Screen extends JPanel
      */
     private void drawHUD (Graphics2D g)
     {
-     // Level and score HUD
+        // Level and score HUD
         g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 40));
         g.drawString("" + controller.getLevel(), SIZE - 40, 45);
         g.drawString("" + controller.getScore(), 10, 45);
-        
+
         // Enhanced HUD
         if (controller.getEnhanced())
             drawEnhancedHUD(g);
-        
+
         // Drawing life count
         g.translate(-10, 75);
         g.rotate(-Math.PI * .5);
-        for (int i = 0; i < controller.getLives(); i++) {
+        for (int i = 0; i < controller.getLives(); i++)
+        {
             g.translate(0, 30);
             g.draw(Ship.createOutline());
         }
     }
-    
+
     /**
      * Drawing the enhanced HUD for the game
      * 
@@ -102,7 +118,8 @@ public class Screen extends JPanel
      */
     private void drawEnhancedHUD (Graphics2D g)
     {
-        if (legend.equals(GAME_OVER)) {
+        if (legend.equals(GAME_OVER))
+        {
             g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
             g.drawString("High Score: " + controller.getHighScore(), 10, SIZE - 15);
         }

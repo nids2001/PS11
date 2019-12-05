@@ -93,6 +93,7 @@ public class AlienShip extends Participant implements ShipDestroyer, AsteroidDes
 
         outline = poly;
 
+
     }
 
     private void turn ()
