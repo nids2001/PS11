@@ -50,6 +50,6 @@ Final Project EC for CS 1410 - Fall 2019
 
 - [ ] **?** Objects on screen with different colors per object [4 points]
 
-- [ ] Two or more players (must have full stats and controls for each) [20 points]
+- [x] Two or more players (must have full stats and controls for each) [20 points]
 
-- [ ] Additional keys programmed for normal play [2 points]
+- [x] Additional keys programmed for normal play [2 points]
