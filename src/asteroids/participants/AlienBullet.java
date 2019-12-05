@@ -21,12 +21,12 @@ public class AlienBullet extends Bullet implements ShipDestroyer
     {
         super(x,y,direction,SPEED_LIMIT - 5,controller);
     }
-    
    
     @Override
     public void collidedWith (Participant p)
     {
         if (p instanceof ShipDestroyer)
-            Participant.expire(this);
+            if (!(p instanceof AlienShip))
+                Participant.expire(this);
     }
 }

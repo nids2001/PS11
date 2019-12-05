@@ -18,6 +18,8 @@ public class Bullet extends Participant implements AsteroidDestroyer
     /** Game controller */
     private Controller controller;
     
+    private int player;
+    
     /**
      * Constructs a bullet at the specified coordinates that is pointed in the given direction.
      */
@@ -27,11 +29,37 @@ public class Bullet extends Participant implements AsteroidDestroyer
         setPosition(x, y);
         setVelocity(speed, direction);
         setRotation(0);
+        player = 0;
         
         Path2D.Double poly = new Path2D.Double();
-        poly.append(new Ellipse2D.Double(-2,-2, 4, 4), true);
+        poly.append(new Ellipse2D.Double(-.5,-.5, 1, 1), true);
         outline = poly;
         controller.sounds.playSound("fire");
+    }
+    
+    /**
+     * Constructs a bullet at the specified coordinates that is pointed in the given direction.
+     */
+    public Bullet (String owner, double x, double y, double direction, double speed, Controller controller)
+    {
+        this.controller = controller;
+        setPosition(x, y);
+        setVelocity(speed, direction);
+        setRotation(0);
+        if (owner.equals("p1"))
+                player = 1;
+        if (owner.equals("p2"))
+                player = 2;
+        
+        Path2D.Double poly = new Path2D.Double();
+        poly.append(new Ellipse2D.Double(-.5,-.5, 1, 1), true);
+        outline = poly;
+        controller.sounds.playSound("fire");
+    }
+    
+    @Override
+    public int getOwner() {
+        return player;
     }
     
     @Override
@@ -45,7 +73,6 @@ public class Bullet extends Participant implements AsteroidDestroyer
     {
         if (p instanceof ShipDestroyer)
             Participant.expire(this);
-        
     }
     
 
