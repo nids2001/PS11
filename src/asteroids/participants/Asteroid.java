@@ -7,6 +7,7 @@ import asteroids.destroyers.AsteroidDestroyer;
 import asteroids.destroyers.ShipDestroyer;
 import asteroids.game.Controller;
 import asteroids.game.Participant;
+import asteroids.game.ParticipantCountdownTimer;
 
 /**
  * Represents asteroids
@@ -21,6 +22,8 @@ public class Asteroid extends Participant implements ShipDestroyer
 
     /** The game controller */
     private Controller controller;
+    
+    private boolean bounce;
 
     /**
      * Throws an IllegalArgumentException if size or variety is out of range.
@@ -44,6 +47,7 @@ public class Asteroid extends Participant implements ShipDestroyer
         // Create the asteroid
         this.controller = controller;
         this.size = size;
+        bounce = false;
         setPosition(x, y);
 
         // Sets the speed of the asteroid depending on the size. There are three speed limits for asteroids: slow,
@@ -56,18 +60,24 @@ public class Asteroid extends Participant implements ShipDestroyer
         }
         if (size == 1)
         {
-            setVelocity(MAX_M_ASTEROID_SPEED + (MAX_L_ASTEROID_SPEED - MAX_M_ASTEROID_SPEED) * RANDOM.nextDouble(), RANDOM.nextDouble() * 2 * Math.PI);
+            setVelocity(MAX_M_ASTEROID_SPEED + (MAX_L_ASTEROID_SPEED - MAX_M_ASTEROID_SPEED) * RANDOM.nextDouble(),
+                    RANDOM.nextDouble() * 2 * Math.PI);
         }
         if (size == 0)
         {
-            setVelocity(MAX_S_ASTEROID_SPEED + (MAX_M_ASTEROID_SPEED - MAX_S_ASTEROID_SPEED) * RANDOM.nextDouble(), RANDOM.nextDouble() * 2 * Math.PI);
+            setVelocity(MAX_S_ASTEROID_SPEED + (MAX_M_ASTEROID_SPEED - MAX_S_ASTEROID_SPEED) * RANDOM.nextDouble(),
+                    RANDOM.nextDouble() * 2 * Math.PI);
         }
-        
-        //randomly sets the rotation of the asteroid
+
+        // randomly sets the rotation of the asteroid
         setRotation(2 * Math.PI * RANDOM.nextDouble());
-        
-        //creates shape outline
+
+        // creates shape outline
         createAsteroidOutline(variety, size);
+        
+        new ParticipantCountdownTimer(this, "bounce", 500);
+        
+        
     }
 
     @Override
@@ -156,6 +166,11 @@ public class Asteroid extends Participant implements ShipDestroyer
         return size;
     }
 
+    public void bounce(Participant one, Participant two) {
+        one.setDirection(one.getDirection() + Math.PI/2 + (RANDOM.nextDouble() * 2 -1));
+        two.setDirection(two.getDirection() + Math.PI/2 + (RANDOM.nextDouble() * 2 -1));
+    }
+
     /**
      * When an Asteroid collides with an AsteroidDestroyer: When a large asteroid collides with a bullet or a ship, the
      * asteroid splits into two medium asteroids. When a medium asteroid collides, it splits into two small asteroids.
@@ -164,6 +179,15 @@ public class Asteroid extends Participant implements ShipDestroyer
     @Override
     public void collidedWith (Participant p)
     {
+        if (controller.getEnhanced() && bounce)
+        {
+            if (p instanceof Asteroid)
+            {
+                bounce(this, p);
+                bounce = false;
+                new ParticipantCountdownTimer(this, "bounce", 600);
+            }
+        }
 
         if (p instanceof AsteroidDestroyer)
         {
@@ -172,7 +196,8 @@ public class Asteroid extends Participant implements ShipDestroyer
             Participant.expire(this);
             Participant.expire(p);
 
-            if (size == 2) {
+            if (size == 2)
+            {
                 controller.addParticipant(new Asteroid(RANDOM.nextInt(3), 1, p.getX(), p.getY(), controller));
                 controller.addParticipant(new Asteroid(RANDOM.nextInt(3), 1, p.getX(), p.getY(), controller));
                 controller.sounds.playSound("bangLarge");
@@ -182,7 +207,8 @@ public class Asteroid extends Participant implements ShipDestroyer
                     controller.addPointsP2(20);
             }
             // else if medium asteroid, splits into 2 small asteroids
-            else if (size == 1) {
+            else if (size == 1)
+            {
                 controller.addParticipant(new Asteroid(RANDOM.nextInt(3), 0, p.getX(), p.getY(), controller));
                 controller.addParticipant(new Asteroid(RANDOM.nextInt(3), 0, p.getX(), p.getY(), controller));
                 controller.sounds.playSound("bangMedium");
@@ -190,7 +216,9 @@ public class Asteroid extends Participant implements ShipDestroyer
                     controller.addPoints(50);
                 if (p.getOwner() == 2)
                     controller.addPointsP2(50);
-            } else {
+            }
+            else
+            {
                 controller.sounds.playSound("bangSmall");
                 if (p.getOwner() == 1)
                     controller.addPoints(100);
@@ -198,12 +226,23 @@ public class Asteroid extends Participant implements ShipDestroyer
                     controller.addPointsP2(100);
             }
             // else (if a small asteroid) it will disappear
-            
+
             // Inform the controller
             controller.asteroidDestroyed();
 
-            
-
+        }
+    }
+    /**
+     * This method is invoked when a ParticipantCountdownTimer completes its countdown.
+     */
+    @Override
+    public void countdownComplete (Object payload)
+    {
+        // Give a burst of acceleration, then schedule another
+        // burst for 200 msecs from now.
+        if (payload.equals("bounce"))
+        {
+            bounce = true;
         }
     }
 }
