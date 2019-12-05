@@ -24,10 +24,13 @@ public class Asteroids
         String[] options = { "Classic", "Enhanced" };
         int choice = JOptionPane.showOptionDialog(null, "Which version would you like to run?", "Choose a Version",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+        
+        //will play classic version
         if (choice == 0)
         {
             new Controller(false);
         }
+        //will play enhanced version
         else if (choice == 1)
         {
             new Controller(true);

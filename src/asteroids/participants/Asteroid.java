@@ -167,7 +167,7 @@ public class Asteroid extends Participant implements ShipDestroyer
 
         if (p instanceof AsteroidDestroyer)
         {
-            new SpecialEffects(p, controller);
+            new SpecialEffects(this, controller);
             // Expire the asteroid
             Participant.expire(this);
             Participant.expire(p);
