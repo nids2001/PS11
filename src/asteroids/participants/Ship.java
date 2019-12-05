@@ -19,6 +19,9 @@ public class Ship extends Participant implements AsteroidDestroyer
     /** Game controller */
     private Controller controller;
     private boolean turningLeft, turningRight, accelerating;
+    
+    public boolean p2;
+    public int owner;
 
     /**
      * Constructs a ship at the specified coordinates that is pointed in the given direction.
@@ -34,8 +37,11 @@ public class Ship extends Participant implements AsteroidDestroyer
         turningLeft = turningRight = accelerating = false;
 
         // Schedule a boop every second
-        new ParticipantCountdownTimer(this, "boop", 1000);
-        controller.sounds.playSound("beat1");
+        if (!p2)
+        {
+            new ParticipantCountdownTimer(this, "boop", 1000);
+            controller.sounds.playSound("beat1");
+        }
     }
 
     /**
@@ -103,6 +109,11 @@ public class Ship extends Participant implements AsteroidDestroyer
             rotate(-Math.PI / 16);
     }
     
+    public void setOwner(int x)
+    {
+        owner = x;
+    }
+    
     /**
      * Sets the ship to turning a certain direction
      * 
@@ -167,7 +178,10 @@ public class Ship extends Participant implements AsteroidDestroyer
             Participant.expire(this);
 
             // Tell the controller the ship was destroyed
-            controller.shipDestroyed();
+            if (!p2)
+                controller.shipDestroyed();
+            else
+                controller.shipDestroyedP2();
         }
     }
 
@@ -177,13 +191,15 @@ public class Ship extends Participant implements AsteroidDestroyer
     @Override
     public void countdownComplete (Object payload)
     {
-        // Either a beep or a boop every second
-        if (payload.equals("boop")) {
-            controller.sounds.playSound("beat2");
-            new ParticipantCountdownTimer(this, "beep", 1000);
-        } else if (payload.equals("beep")) {
-            controller.sounds.playSound("beat1");
-            new ParticipantCountdownTimer(this,"boop", 1000);
+        if (!p2) {
+            // Either a beep or a boop every second
+            if (payload.equals("boop")) {
+                controller.sounds.playSound("beat2");
+                new ParticipantCountdownTimer(this, "beep", 1000);
+            } else if (payload.equals("beep")) {
+                controller.sounds.playSound("beat1");
+                new ParticipantCountdownTimer(this,"boop", 1000);
+            }
         }
     }
 }
