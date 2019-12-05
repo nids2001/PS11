@@ -26,7 +26,6 @@ public class SpecialEffects
         // if p is a ship, add ship debris
         if (p instanceof Ship)
         {
-            
             line1 = new DustParticle(p.getX(), p.getY(), SHIP_HEIGHT);
             line2 = new DustParticle(p.getX(), p.getY(), SHIP_HEIGHT);
             line3 = new DustParticle(p.getX(), p.getY(), SHIP_WIDTH);
