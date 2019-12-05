@@ -6,7 +6,6 @@ import java.util.Iterator;
 import javax.swing.*;
 import asteroids.participants.AlienShip;
 import asteroids.participants.Asteroid;
-import asteroids.participants.Bullet;
 import asteroids.participants.Ship;
 import sounds.Sounds;
 
@@ -196,7 +195,6 @@ public class Controller implements ActionListener, Iterable<Participant>
         alienShip = new AlienShip(this);
         
         addParticipant(alienShip);
-        display.addKeyListener(keyListener);
     }
 
     /**
@@ -233,6 +231,11 @@ public class Controller implements ActionListener, Iterable<Participant>
      */
     private void initialScreen ()
     {
+        // Reset statistics
+        lives = 3;
+        score = 0;
+        level = 1;
+        
         // Clear the screen
         clear();
 
@@ -242,17 +245,14 @@ public class Controller implements ActionListener, Iterable<Participant>
         // Place the ship
         placeShip();
         
-//        placeAlienShip();
+        placeAlienShip();
 
 
         // //place mines
         // addParticipant(new Mine(50,80,1.0, Math.PI/4, this));
         // addParticipant(new Mine(80, 430, 2.0, Math.PI/8, this));
 
-        // Reset statistics
-        lives = 3;
-        score = 0;
-        level = 1;
+        
         // Clear the transition time
         transitionTime = Long.MAX_VALUE;
 
@@ -304,13 +304,15 @@ public class Controller implements ActionListener, Iterable<Participant>
      */
     public void alienShipDestroyed ()
     {
-        display.removeKeyListener(keyListener);
         alienShip = null;
         addAlienShipTimer.start();
-        if (level >= 3)
+        if (level >= 3) {
             sounds.stopSound("saucerSmall");
-        else
+            addPoints(1000);
+        } else {
             sounds.stopSound("saucerBig");
+            addPoints(200);
+        }
         sounds.playSound("bangAlienShip");
     }
 

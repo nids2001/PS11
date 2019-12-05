@@ -115,7 +115,6 @@ public class AlienShip extends Participant implements ShipDestroyer
         }
         if (size == 0)
         {
-
             controller.addParticipant(new AlienBullet(getX(), getY(), getRandAngleToShip(), controller));
         }
     }
