@@ -27,9 +27,9 @@ Final Project for CS 1410 - Fall 2019
 
 - [x] Ship rotation and thruster firing work smoothly in the complete game. The controls in the stripped-down game are very awkward by comparison.
 
-- [ ] At level 2, a medium size alien ship appears 5-10 seconds after the level begins. It follows a zig-zag path, periodically firing bullets in random directions. It starts off screen and goes in a direction either left-to-right or right-to-left across the screen. It randomly zig-zags in three directions: either perfectly horizontal, or at a slight angle one radian upward or downward from horizontal. When it is destroyed, you earn 200 points. About 5-10 seconds later, it appears again. **(NIDHI)**
+- [x] At level 2, a medium size alien ship appears 5-10 seconds after the level begins. It follows a zig-zag path, periodically firing bullets in random directions. It starts off screen and goes in a direction either left-to-right or right-to-left across the screen. It randomly zig-zags in three directions: either perfectly horizontal, or at a slight angle one radian upward or downward from horizontal. When it is destroyed, you earn 200 points. About 5-10 seconds later, it appears again. **(NIDHI)**
 
-- [ ] At level 3 and above, the medium alien ship stops appearing and the small alien ship appears instead. The small alien ship zig-zags the same as the medium alien ship, but moves faster and fires bullets toward the ship. (Specifically, it fires in a randomly chosen direction that is within five degrees of the direction of the center of the ship.) Its destruction earns you 1000 points. **(NIDHI)**
+- [x] At level 3 and above, the medium alien ship stops appearing and the small alien ship appears instead. The small alien ship zig-zags the same as the medium alien ship, but moves faster and fires bullets toward the ship. (Specifically, it fires in a randomly chosen direction that is within five degrees of the direction of the center of the ship.) Its destruction earns you 1000 points. **(NIDHI)**
 
 - [x] There are complete sound effects. **(GRANT)**
 
