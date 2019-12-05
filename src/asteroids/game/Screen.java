@@ -65,22 +65,46 @@ public class Screen extends JPanel
             p.draw(g);
         }
         
-        // showing the level, lifecount, and score in corners
-        if (!legend.equals("ASTEROIDS")) {
-            g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 40));
-            g.drawString("" + controller.getLevel(), SIZE - 40, 45);
-            g.drawString("" + controller.getScore(), 10, 45);
-            
-            // Drawing life count
-            g.translate(-10, 75);
-            g.rotate(-Math.PI * .5);
-            for (int i = 0; i < controller.getLives(); i++) {
-                g.translate(0, 30);
-                g.draw(Ship.createOutline());
-            }
-            
+        // in-game HUD
+        if (!legend.equals("ASTEROIDS"))
+            drawHUD(g);
+    }
+    
+    /**
+     * Drawing the HUD for the game
+     * 
+     * @param g
+     */
+    private void drawHUD (Graphics2D g)
+    {
+     // Level and score HUD
+        g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 40));
+        g.drawString("" + controller.getLevel(), SIZE - 40, 45);
+        g.drawString("" + controller.getScore(), 10, 45);
+        
+        // Enhanced HUD
+        if (controller.getEnhanced())
+            drawEnhancedHUD(g);
+        
+        // Drawing life count
+        g.translate(-10, 75);
+        g.rotate(-Math.PI * .5);
+        for (int i = 0; i < controller.getLives(); i++) {
+            g.translate(0, 30);
+            g.draw(Ship.createOutline());
         }
-        
-        
+    }
+    
+    /**
+     * Drawing the enhanced HUD for the game
+     * 
+     * @param g
+     */
+    private void drawEnhancedHUD (Graphics2D g)
+    {
+        if (legend.equals(GAME_OVER)) {
+            g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
+            g.drawString("High Score: " + controller.getHighScore(), 10, SIZE - 15);
+        }
     }
 }
