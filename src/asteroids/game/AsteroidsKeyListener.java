@@ -40,6 +40,8 @@ public class AsteroidsKeyListener implements KeyListener
         // Alt controls
         if (!controller.getEnhanced())
             altKeyPressed(e);
+        else
+            enhancedAltKeyPressed(e);
     }
     
     @Override
@@ -57,6 +59,8 @@ public class AsteroidsKeyListener implements KeyListener
         // Alt controls
         if (!controller.getEnhanced())
             altKeyReleased(e);
+        else
+            enhancedAltKeyReleased(e);
     }
     
     /**
@@ -79,6 +83,22 @@ public class AsteroidsKeyListener implements KeyListener
             controller.getPState().addParticipant(new Bullet("p1", ship.getXNose(), ship.getYNose(), ship.getRotation(), SPEED_LIMIT+5, controller));
     }
     
+    private void enhancedAltKeyPressed(KeyEvent e)
+    {
+     // Alt Movement
+        if ( e.getKeyCode() == KeyEvent.VK_L)
+            ship.setTurning("left", true);
+        if (e.getKeyCode() == KeyEvent.VK_J)
+            ship.setTurning("right", true);
+        if (e.getKeyCode() == KeyEvent.VK_I) {
+            ship.setAccelerating(true);
+            controller.sounds.playSound("thrust"); }
+        
+        // Alt Fire
+        if ((e.getKeyCode() == KeyEvent.VK_K) && !controller.getPState().isP1Maxed())
+            controller.getPState().addParticipant(new Bullet("p1", ship.getXNose(), ship.getYNose(), ship.getRotation(), SPEED_LIMIT+5, controller));
+    }
+    
     /**
      * Alternate (WASD) controls
      * 
@@ -91,6 +111,23 @@ public class AsteroidsKeyListener implements KeyListener
         if (e.getKeyCode() == KeyEvent.VK_A)
             ship.setTurning("right", false);
         if (e.getKeyCode() == KeyEvent.VK_W) {
+            ship.setAccelerating(false);
+            controller.sounds.stopSound("thrust");
+        }
+    }
+    
+    /**
+     * Alternate (WASD) controls
+     * 
+     */
+    private void enhancedAltKeyReleased (KeyEvent e)
+    {
+        // Alt end movement
+        if (e.getKeyCode() == KeyEvent.VK_L)
+            ship.setTurning("left", false);
+        if (e.getKeyCode() == KeyEvent.VK_J)
+            ship.setTurning("right", false);
+        if (e.getKeyCode() == KeyEvent.VK_I) {
             ship.setAccelerating(false);
             controller.sounds.stopSound("thrust");
         }
