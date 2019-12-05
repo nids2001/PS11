@@ -70,9 +70,22 @@ public class Screen extends JPanel
                 {
                     g.setColor(Color.GREEN);
                 }
-                
-                if (p instanceof Asteroid) {
-                    g.setColor(Color.PINK);
+
+                if (p instanceof Asteroid)
+                {
+                    g.setColor(Color.ORANGE);
+                }
+                if (p instanceof Ship)
+                {
+                    if (p.equals(controller.getShip()))
+                    {
+                        g.setColor(Color.PINK);
+                    }
+
+                    else if (p.equals(controller.getShipP2()))
+                    {
+                        g.setColor(Color.CYAN);
+                    }
                 }
             }
             p.draw(g);
