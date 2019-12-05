@@ -35,7 +35,7 @@ public class AsteroidsKeyListener implements KeyListener
         // Enhanced Controls
 //        if (controller.getEnhanced())
 //            enhancedKeyPressed(e);
-        else
+//        else
             altKeyPressed(e);
     }
     
@@ -54,7 +54,7 @@ public class AsteroidsKeyListener implements KeyListener
         // Enhanced Controls
 //        if (controller.getEnhanced())
 //            enhancedKeyReleased(e);
-        else
+//        else
             altKeyReleased(e);
     }
     
