@@ -12,7 +12,7 @@ import asteroids.game.Controller;
 import asteroids.game.Participant;
 import asteroids.game.ParticipantCountdownTimer;
 
-public class AlienShip extends Participant implements ShipDestroyer
+public class AlienShip extends Participant implements ShipDestroyer, AsteroidDestroyer
 {
     private Controller controller;
     private int size, speed, length, height;
@@ -111,7 +111,7 @@ public class AlienShip extends Participant implements ShipDestroyer
     {
         if (size == 1)
         {
-            controller.addParticipant(new AlienBullet(getX(), getY(), Math.PI * RANDOM.nextDouble(), controller));
+            controller.addParticipant(new AlienBullet(getX(), getY(), 2* Math.PI * RANDOM.nextDouble(), controller));
         }
         if (size == 0)
         {
@@ -158,7 +158,6 @@ public class AlienShip extends Participant implements ShipDestroyer
         {
             if (p instanceof AsteroidDestroyer)
             {
-                new SpecialEffects(this, controller);
                 Participant.expire(this);
                 Participant.expire(p);
                 controller.alienShipDestroyed();
