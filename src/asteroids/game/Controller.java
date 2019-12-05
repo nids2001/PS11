@@ -270,6 +270,10 @@ public class Controller implements ActionListener, Iterable<Participant>
         
         //stop add alien ship timer
         addAlienShipTimer.stop();
+        
+        //stop alien ship sounds playing
+        sounds.stopSound("saucerBig");
+        sounds.stopSound("saucerSmall");
 
         // Start listening to events (but don't listen twice)
         display.removeKeyListener(keyListener);

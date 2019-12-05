@@ -162,6 +162,12 @@ public class AlienShip extends Participant implements ShipDestroyer, AsteroidDes
                 Participant.expire(p);
                 controller.alienShipDestroyed();
             }
+            if(p instanceof Asteroid) {
+                Participant.expire(this);
+                Participant.expire(p);
+                controller.alienShipDestroyed();
+                
+            }
         }
 
     }
