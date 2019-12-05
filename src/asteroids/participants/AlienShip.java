@@ -38,7 +38,7 @@ public class AlienShip extends Participant implements ShipDestroyer
             size = 0;
             length = 20;
             height = 25;
-
+            controller.sounds.playSound("saucerSmall");
             setSpeed(SMALL_SPEED);
         }
         else
@@ -46,6 +46,7 @@ public class AlienShip extends Participant implements ShipDestroyer
             size = 1;
             length = 40;
             height = 50;
+            controller.sounds.playSound("saucerBig");
             setSpeed(MEDIUM_SPEED);
         }
 

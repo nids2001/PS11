@@ -194,7 +194,7 @@ public class Controller implements ActionListener, Iterable<Participant>
     {
 
         alienShip = new AlienShip(this);
-
+        
         addParticipant(alienShip);
         display.addKeyListener(keyListener);
     }
@@ -242,7 +242,7 @@ public class Controller implements ActionListener, Iterable<Participant>
         // Place the ship
         placeShip();
         
-        //placeAlienShip();
+//        placeAlienShip();
 
 
         // //place mines
@@ -307,6 +307,11 @@ public class Controller implements ActionListener, Iterable<Participant>
         display.removeKeyListener(keyListener);
         alienShip = null;
         addAlienShipTimer.start();
+        if (level >= 3)
+            sounds.stopSound("saucerSmall");
+        else
+            sounds.stopSound("saucerBig");
+        sounds.playSound("bangAlienShip");
     }
 
     /**

@@ -36,7 +36,6 @@ public class SpecialEffects
         controller.addParticipant(particle2);
         controller.addParticipant(particle3);
         controller.addParticipant(particle4);
-
     }
     
     public SpecialEffects (Participant p, Controller cont, boolean ship)
