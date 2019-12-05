@@ -7,6 +7,7 @@ import java.awt.Shape;
 import java.awt.geom.Point2D;
 import asteroids.game.Controller;
 import asteroids.game.Participant;
+import asteroids.participants.DustParticle;
 
 public class SpecialEffects
 {
