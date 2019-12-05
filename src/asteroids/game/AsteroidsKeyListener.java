@@ -33,15 +33,36 @@ public class AsteroidsKeyListener implements KeyListener
             controller.getPState().addParticipant(new Bullet(controller.getShip().getXNose(), controller.getShip().getYNose(), controller.getShip().getRotation(), SPEED_LIMIT+5, controller));
         
         // Enhanced Controls
-        if (controller.getEnhanced())
-            enhancedKeyPressed(e);
+//        if (controller.getEnhanced())
+//            enhancedKeyPressed(e);
+        else
+            altKeyPressed(e);
+    }
+    
+    @Override
+    public void keyReleased (KeyEvent e)
+    {
+        // End movement
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT)
+            controller.getShip().setTurning("left", false);
+        if (e.getKeyCode() == KeyEvent.VK_LEFT)
+            controller.getShip().setTurning("right", false);
+        if (e.getKeyCode() == KeyEvent.VK_UP) {
+            controller.getShip().setAccelerating(false);
+            controller.sounds.stopSound("thrust"); }
+        
+        // Enhanced Controls
+//        if (controller.getEnhanced())
+//            enhancedKeyReleased(e);
+        else
+            altKeyReleased(e);
     }
     
     /**
-     * Enhanced key controls
+     * Alternate (WASD) controls
      * 
      */
-    private void enhancedKeyPressed(KeyEvent e)
+    private void altKeyPressed(KeyEvent e)
     {
         // Alt Movement
         if ( e.getKeyCode() == KeyEvent.VK_D)
@@ -56,30 +77,12 @@ public class AsteroidsKeyListener implements KeyListener
         if ((e.getKeyCode() == KeyEvent.VK_S) && !controller.getPState().isBulletMaxed())
             controller.getPState().addParticipant(new Bullet(controller.getShip().getXNose(), controller.getShip().getYNose(), controller.getShip().getRotation(), SPEED_LIMIT+5, controller));
     }
-
-    @Override
-    public void keyTyped (KeyEvent e)
-    {
-    }
-
-    @Override
-    public void keyReleased (KeyEvent e)
-    {
-        // End movement
-        if (e.getKeyCode() == KeyEvent.VK_RIGHT)
-            controller.getShip().setTurning("left", false);
-        if (e.getKeyCode() == KeyEvent.VK_LEFT)
-            controller.getShip().setTurning("right", false);
-        if (e.getKeyCode() == KeyEvent.VK_UP) {
-            controller.getShip().setAccelerating(false);
-            controller.sounds.stopSound("thrust"); }
-        
-        // Enhanced Controls
-        if (controller.getEnhanced())
-            enhancedKeyReleased(e);
-    }
     
-    public void enhancedKeyReleased (KeyEvent e)
+    /**
+     * Alternate (WASD) controls
+     * 
+     */
+    public void altKeyReleased (KeyEvent e)
     {
         // Alt end movement
         if (e.getKeyCode() == KeyEvent.VK_D)
@@ -90,5 +93,10 @@ public class AsteroidsKeyListener implements KeyListener
             controller.getShip().setAccelerating(false);
             controller.sounds.stopSound("thrust");
         }
+    }
+    
+    @Override
+    public void keyTyped (KeyEvent e)
+    {
     }
 }
