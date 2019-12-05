@@ -21,6 +21,7 @@ public class Controller implements ActionListener, Iterable<Participant>
 
     /** The ship (if one is active) or null (otherwise) */
     private Ship ship;
+    private Ship ship2;
 
     private AlienShip alienShip;
 
@@ -31,6 +32,7 @@ public class Controller implements ActionListener, Iterable<Participant>
     public Sounds sounds;
     
     private AsteroidsKeyListener keyListener;
+    private EnhancedKeyListener keyListener2;
     
     /**
      * The time at which a transition to a new stage of the game should be made. A transition is scheduled a few seconds
@@ -38,9 +40,10 @@ public class Controller implements ActionListener, Iterable<Participant>
      * resetting the current level.
      */
     private long transitionTime;
+    private long transitionTime2;
 
     /** Number of lives left */
-    private int lives, score, level;
+    private int lives, livesP2, score, scoreP2, level;
     private int scoreMemory;
     private int highScore;
 
@@ -52,13 +55,10 @@ public class Controller implements ActionListener, Iterable<Participant>
      * 
      * @param enhanced whether or not entering enhanced mode
      */
-    public Controller (boolean enhanced)
+    public Controller (boolean enh)
     {
         // Determining whether or not the gamemode is enhanced
-        if (enhanced)
-            ENHANCED = true;
-        else
-            ENHANCED = false;
+        ENHANCED = enh;
         
         highScore = 0;
         keyListener = new AsteroidsKeyListener(this);
@@ -85,6 +85,11 @@ public class Controller implements ActionListener, Iterable<Participant>
         splashScreen();
         display.setVisible(true);
         refreshTimer.start();
+        
+        if (ENHANCED) {
+            keyListener2 = new EnhancedKeyListener(this);
+            transitionTime2 = Long.MAX_VALUE;
+        }
     }
 
     /**
@@ -104,6 +109,14 @@ public class Controller implements ActionListener, Iterable<Participant>
     {
         return ship;
     }
+    
+    /**
+     * Returns the ship2, or null if there isn't a player2
+     */
+    public Ship getShipP2 ()
+    {
+        return ship2;
+    }
 
     /**
      * Returns lives
@@ -112,6 +125,14 @@ public class Controller implements ActionListener, Iterable<Participant>
     {
         return lives;
     }
+    
+    /**
+     * Returns lives
+     */
+    public int getLivesP2 ()
+    {
+        return livesP2;
+    }
 
     /**
      * Returns score
@@ -119,6 +140,14 @@ public class Controller implements ActionListener, Iterable<Participant>
     public int getScore ()
     {
         return score;
+    }
+    
+    /**
+     * Returns score
+     */
+    public int getScoreP2 ()
+    {
+        return scoreP2;
     }
 
     /**
@@ -171,10 +200,14 @@ public class Controller implements ActionListener, Iterable<Participant>
      */
     private void finalScreen ()
     {
-        if (score > highScore)
+        if (score > scoreP2 && score > highScore)
             highScore = score;
+        else if (scoreP2 > score && scoreP2 > highScore)
+            highScore = scoreP2;
         display.setLegend(GAME_OVER);
         display.removeKeyListener(keyListener);
+        if (ENHANCED)
+            display.removeKeyListener(keyListener2);
     }
 
     /**
@@ -184,16 +217,32 @@ public class Controller implements ActionListener, Iterable<Participant>
     {
         // Place a new ship
         Participant.expire(ship);
-        ship = new Ship(SIZE / 2, SIZE / 2, -Math.PI / 2, this);
+        if (!ENHANCED)
+            ship = new Ship(SIZE / 2, SIZE / 2, -Math.PI / 2, this);    
+        else
+            ship = new Ship(SIZE / 3, SIZE / 2, -Math.PI / 2, this);
+        ship.setOwner(1);
         addParticipant(ship);
         display.addKeyListener(keyListener);
+    }
+    
+    /**
+     * Place a new ship in the center of the screen. Remove any existing ship first.
+     */
+    private void placeShipP2 ()
+    {
+        // Place a new ship
+        Participant.expire(ship2);
+        ship2 = new Ship(SIZE / 3 * 2, SIZE / 2, -Math.PI / 2, this);
+        ship2.p2 = true;
+        ship2.setOwner(2);
+        addParticipant(ship2);
+        display.addKeyListener(keyListener2);
     }
 
     private void placeAlienShip ()
     {
-
         alienShip = new AlienShip(this);
-        
         addParticipant(alienShip);
     }
 
@@ -224,6 +273,8 @@ public class Controller implements ActionListener, Iterable<Participant>
         pstate.clear();
         display.setLegend("");
         ship = null;
+        if (ENHANCED)
+            ship2 = null;
     }
 
     /**
@@ -232,8 +283,8 @@ public class Controller implements ActionListener, Iterable<Participant>
     private void initialScreen ()
     {
         // Reset statistics
-        lives = 3;
-        score = 0;
+        lives = livesP2 = 3;
+        score = scoreP2 = 0;
         level = 1;
         
         // Clear the screen
@@ -244,8 +295,12 @@ public class Controller implements ActionListener, Iterable<Participant>
 
         // Place the ship
         placeShip();
+        // P2 ship
+        if (ENHANCED) {
+            placeShipP2();
+        }
         
-        placeAlienShip();
+//        placeAlienShip();
 
 
         // //place mines
@@ -255,10 +310,18 @@ public class Controller implements ActionListener, Iterable<Participant>
         
         // Clear the transition time
         transitionTime = Long.MAX_VALUE;
+        if (ENHANCED)
+            transitionTime2 = Long.MAX_VALUE;
 
         // Start listening to events (but don't listen twice)
         display.removeKeyListener(keyListener);
         display.addKeyListener(keyListener);
+        // P2 controls
+        if (ENHANCED) {
+            display.removeKeyListener(keyListener2);
+            display.addKeyListener(keyListener2);
+        }
+
 
         // Give focus to the game screen
         display.requestFocusInWindow();
@@ -272,6 +335,16 @@ public class Controller implements ActionListener, Iterable<Participant>
     public void addPoints (int x)
     {
         score += x;
+    }
+    
+    /**
+     * Increases scoreP2 by x amount
+     * 
+     * @p x points gained
+     */
+    public void addPointsP2 (int x)
+    {
+        scoreP2 += x;
     }
 
     /**
@@ -298,6 +371,23 @@ public class Controller implements ActionListener, Iterable<Participant>
         // Since the ship was destroyed, schedule a transition
         scheduleTransition(END_DELAY);
     }
+    
+    /**
+     * The ship has been destroyed
+     */
+    public void shipDestroyedP2 ()
+    {
+        display.removeKeyListener(keyListener2);
+        // Decrement lives
+        //lives--;
+
+        // Play destruction sound (and end thrust sound if it's running)
+        sounds.stopSound("thrust");
+        sounds.playSound("bangShip");
+
+        // Since the ship was destroyed, schedule a transition
+        scheduleTransition2(END_DELAY);
+    }
 
     /**
      * Alien ship has been destroyed
@@ -306,13 +396,11 @@ public class Controller implements ActionListener, Iterable<Participant>
     {
         alienShip = null;
         addAlienShipTimer.start();
-        if (level >= 3) {
+        if (level >= 3)
             sounds.stopSound("saucerSmall");
-            addPoints(1000);
-        } else {
+        else
             sounds.stopSound("saucerBig");
-            addPoints(200);
-        }
+        
         sounds.playSound("bangAlienShip");
     }
 
@@ -335,6 +423,14 @@ public class Controller implements ActionListener, Iterable<Participant>
     {
         transitionTime = System.currentTimeMillis() + m;
     }
+    
+    /**
+     * Schedules a transition m msecs in the future
+     */
+    private void scheduleTransition2 (int m)
+    {
+        transitionTime2 = System.currentTimeMillis() + m;
+    }
 
     /**
      * This method will be invoked because of button presses and timer events.
@@ -352,7 +448,7 @@ public class Controller implements ActionListener, Iterable<Participant>
         // Time to refresh the screen and deal with keyboard input
         else if (e.getSource() == refreshTimer)
         {
-            // It may be time to gain a life
+            // Gaining a life every 1000 points
             if (ENHANCED && (score - scoreMemory > 1000)) {
 
                 lives++;
@@ -361,6 +457,8 @@ public class Controller implements ActionListener, Iterable<Participant>
 
             // It may be time to make a game transition
             performTransition();
+            if (ENHANCED)
+                performTransition2();
 
             // Move the participants to their new locations
             pstate.moveParticipants();
@@ -389,10 +487,8 @@ public class Controller implements ActionListener, Iterable<Participant>
             transitionTime = Long.MAX_VALUE;
 
             // If there are no lives left, the game is over. Show the final screen.
-            if (lives <= 0)
-            {
+            if (lives <= 0 && livesP2 <= 0)
                 finalScreen();
-            }
             else
             {
                 // Replace the ship if there are lives remaining
@@ -403,11 +499,32 @@ public class Controller implements ActionListener, Iterable<Participant>
                     level++;
                     placeAsteroids(level);
                     addAlienShipTimer.restart();
+                    if (ENHANCED)
+                        placeShipP2();
                 }
             }
         }
     }
 
+    /**
+     * If the transition time has been reached, transition to a new state
+     */
+    private void performTransition2 ()
+    {
+        // Do something only if the time has been reached
+        if (transitionTime2 <= System.currentTimeMillis())
+        {
+            // Clear the transition time
+            transitionTime2 = Long.MAX_VALUE;
+            
+            if (lives <= 0 && livesP2 <= 0)
+                finalScreen();
+            else
+            {
+                placeShipP2();
+            }
+        }
+    }
     /**
      * Returns the number of asteroids that are active participants
      */

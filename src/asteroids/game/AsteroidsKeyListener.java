@@ -37,10 +37,8 @@ public class AsteroidsKeyListener implements KeyListener
         if ((e.getKeyCode() == KeyEvent.VK_SPACE || e.getKeyCode() == KeyEvent.VK_DOWN) && !controller.getPState().isP1Maxed())
             controller.getPState().addParticipant(new Bullet("p1", ship.getXNose(), ship.getYNose(), ship.getRotation(), SPEED_LIMIT+5, controller));
         
-        // Enhanced Controls
-//        if (controller.getEnhanced())
-//            enhancedKeyPressed(e);
-//        else
+        // Alt controls
+        if (!controller.getEnhanced())
             altKeyPressed(e);
     }
     
@@ -56,10 +54,8 @@ public class AsteroidsKeyListener implements KeyListener
             ship.setAccelerating(false);
             controller.sounds.stopSound("thrust"); }
         
-        // Enhanced Controls
-//        if (controller.getEnhanced())
-//            enhancedKeyReleased(e);
-//        else
+        // Alt controls
+        if (!controller.getEnhanced())
             altKeyReleased(e);
     }
     

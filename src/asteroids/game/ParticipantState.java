@@ -71,6 +71,7 @@ public class ParticipantState implements Iterable<Participant>
             }
         }
         
+//        System.out.println(p2count);
         p1maxed = (p1count >= 8);
         p2maxed = (p2count >= 8);   
     }

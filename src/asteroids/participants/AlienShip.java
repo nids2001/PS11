@@ -162,6 +162,17 @@ public class AlienShip extends Participant implements ShipDestroyer
                 Participant.expire(this);
                 Participant.expire(p);
                 controller.alienShipDestroyed();
+                if (this.size == 0) {
+                    if (p.getOwner() == 1)
+                        controller.addPoints(1000);
+                    if (p.getOwner() == 2)
+                        controller.addPointsP2(1000);
+                } else {
+                    if (p.getOwner() == 1)
+                        controller.addPoints(200);
+                    if (p.getOwner() == 2)
+                        controller.addPointsP2(200);
+                }
             }
         }
 
