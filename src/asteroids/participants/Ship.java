@@ -155,7 +155,7 @@ public class Ship extends Participant implements AsteroidDestroyer
     {
         if (p instanceof ShipDestroyer)
         {
-            //new SpecialEffects(this, controller);
+            new SpecialEffects(this, controller, true);
             
             // Expire the ship from the game
             Participant.expire(this);

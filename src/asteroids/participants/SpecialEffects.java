@@ -37,6 +37,12 @@ public class SpecialEffects
         controller.addParticipant(particle3);
         controller.addParticipant(particle4);
 
+    }
+    
+    public SpecialEffects (Participant p, Controller cont, boolean ship)
+    {
+        this.controller = cont;
+
         // adds debris to the dust
         if (p instanceof Ship)
         {
@@ -47,9 +53,9 @@ public class SpecialEffects
             // line3 = new DustParticle(RANDOM.nextInt(RANGE/2) + p.getX(), RANDOM.nextInt(RANGE/2) + p.getY(),
             // SHIP_WIDTH);
             
-            line1 = new DustParticle(cont.getShip().getX()-20, cont.getShip().getY()-20, SHIP_HEIGHT);
-            line2 = new DustParticle(cont.getShip().getX()-20, cont.getShip().getY()-20, SHIP_HEIGHT);
-            line3 = new DustParticle(cont.getShip().getX()-20, cont.getShip().getY()-20, SHIP_WIDTH);
+            line1 = new DustParticle(cont.getShip().getXNose(), cont.getShip().getYNose(), SHIP_HEIGHT);
+            line2 = new DustParticle(cont.getShip().getXNose(), cont.getShip().getYNose(), SHIP_HEIGHT);
+            line3 = new DustParticle(cont.getShip().getXNose(), cont.getShip().getYNose(), SHIP_WIDTH);
 
             line1.setRotation(RANDOM.nextDouble() * 2 * Math.PI);
             line2.setRotation(RANDOM.nextDouble() * 2 * Math.PI);
@@ -63,7 +69,6 @@ public class SpecialEffects
             controller.addParticipant(line2);
             controller.addParticipant(line3);
 
-            ship = true;
         }
 
     }

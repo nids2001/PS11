@@ -4,6 +4,7 @@ import static asteroids.game.Constants.*;
 import java.awt.event.*;
 import java.util.Iterator;
 import javax.swing.*;
+import asteroids.participants.AlienShip;
 import asteroids.participants.Asteroid;
 import asteroids.participants.Bullet;
 import asteroids.participants.Ship;
@@ -17,14 +18,16 @@ public class Controller implements ActionListener, Iterable<Participant>
     private boolean ENHANCED;
     
     /** The state of all the Participants */
-    private ParticipantState pstate;
+    protected ParticipantState pstate;
 
     /** The ship (if one is active) or null (otherwise) */
     private Ship ship;
 
+    private AlienShip alienShip;
+
     /** When this timer goes off, it is time to refresh the animation */
-    private Timer refreshTimer;
-    
+    private Timer refreshTimer, addAlienShipTimer;
+
     /** Sound player */
     public Sounds sounds;
     
@@ -66,13 +69,16 @@ public class Controller implements ActionListener, Iterable<Participant>
 
         // Set up the refresh timer.
         refreshTimer = new Timer(FRAME_INTERVAL, this);
+        
+        // Set up time to delay alien ship coming on screen
+        addAlienShipTimer = new Timer(RANDOM.nextInt(5000) + 5000, this);
 
         // Clear the transitionTime
         transitionTime = Long.MAX_VALUE;
 
         // Record the display object
         display = new Display(this);
-        
+
         // Load sound files
         sounds = new Sounds();
 
@@ -99,7 +105,7 @@ public class Controller implements ActionListener, Iterable<Participant>
     {
         return ship;
     }
-    
+
     /**
      * Returns lives
      */
@@ -107,7 +113,7 @@ public class Controller implements ActionListener, Iterable<Participant>
     {
         return lives;
     }
-    
+
     /**
      * Returns score
      */
@@ -115,7 +121,7 @@ public class Controller implements ActionListener, Iterable<Participant>
     {
         return score;
     }
-    
+
     /**
      * Returns high score
      */
@@ -184,18 +190,32 @@ public class Controller implements ActionListener, Iterable<Participant>
         display.addKeyListener(keyListener);
     }
 
+    private void placeAlienShip ()
+    {
+
+        alienShip = new AlienShip(this);
+
+        addParticipant(alienShip);
+        display.addKeyListener(keyListener);
+    }
+
     /**
      * Places an asteroid near one corner of the screen. Gives it a random velocity and rotation.
      */
     private void placeAsteroids (int level)
     {
-        addParticipant(new Asteroid(RANDOM.nextInt(4), 2, RANDOM.nextInt(EDGE_OFFSET), RANDOM.nextInt(EDGE_OFFSET), this));
-        addParticipant(new Asteroid(RANDOM.nextInt(4), 2, 750 - RANDOM.nextInt(EDGE_OFFSET), RANDOM.nextInt(EDGE_OFFSET), this));
-        addParticipant(new Asteroid(RANDOM.nextInt(4), 2, RANDOM.nextInt(EDGE_OFFSET), 750 - RANDOM.nextInt(EDGE_OFFSET), this));
-        addParticipant(new Asteroid(RANDOM.nextInt(4), 2, 750 - RANDOM.nextInt(EDGE_OFFSET), 750 - RANDOM.nextInt(EDGE_OFFSET), this));
-        
+        addParticipant(
+                new Asteroid(RANDOM.nextInt(4), 2, RANDOM.nextInt(EDGE_OFFSET), RANDOM.nextInt(EDGE_OFFSET), this));
+        addParticipant(new Asteroid(RANDOM.nextInt(4), 2, 750 - RANDOM.nextInt(EDGE_OFFSET),
+                RANDOM.nextInt(EDGE_OFFSET), this));
+        addParticipant(new Asteroid(RANDOM.nextInt(4), 2, RANDOM.nextInt(EDGE_OFFSET),
+                750 - RANDOM.nextInt(EDGE_OFFSET), this));
+        addParticipant(new Asteroid(RANDOM.nextInt(4), 2, 750 - RANDOM.nextInt(EDGE_OFFSET),
+                750 - RANDOM.nextInt(EDGE_OFFSET), this));
+
         for (int i = 1; i < level; i++)
-            addParticipant(new Asteroid(RANDOM.nextInt(4), 2, RANDOM.nextInt(EDGE_OFFSET), RANDOM.nextInt(EDGE_OFFSET), this));
+            addParticipant(
+                    new Asteroid(RANDOM.nextInt(4), 2, RANDOM.nextInt(EDGE_OFFSET), RANDOM.nextInt(EDGE_OFFSET), this));
     }
 
     /**
@@ -222,9 +242,12 @@ public class Controller implements ActionListener, Iterable<Participant>
         // Place the ship
         placeShip();
         
-//        //place mines
-//        addParticipant(new Mine(50,80,1.0, Math.PI/4, this));
-//        addParticipant(new Mine(80, 430, 2.0, Math.PI/8, this));
+        //placeAlienShip();
+
+
+        // //place mines
+        // addParticipant(new Mine(50,80,1.0, Math.PI/4, this));
+        // addParticipant(new Mine(80, 430, 2.0, Math.PI/8, this));
 
         // Reset statistics
         lives = 3;
@@ -240,15 +263,15 @@ public class Controller implements ActionListener, Iterable<Participant>
         // Give focus to the game screen
         display.requestFocusInWindow();
     }
-    
+
     /**
      * Increases score by x amount
      * 
      * @p x points gained
      */
-    public void addPoints(int x)
+    public void addPoints (int x)
     {
-        score+= x;
+        score += x;
     }
 
     /**
@@ -266,8 +289,8 @@ public class Controller implements ActionListener, Iterable<Participant>
     {
         display.removeKeyListener(keyListener);
         // Decrement lives
-        lives--;
-        
+        //lives--;
+
         // Play destruction sound (and end thrust sound if it's running)
         sounds.stopSound("thrust");
         sounds.playSound("bangShip");
@@ -277,10 +300,20 @@ public class Controller implements ActionListener, Iterable<Participant>
     }
 
     /**
+     * Alien ship has been destroyed
+     */
+    public void alienShipDestroyed ()
+    {
+        display.removeKeyListener(keyListener);
+        alienShip = null;
+        addAlienShipTimer.start();
+    }
+
+    /**
      * An asteroid has been destroyed
      */
     public void asteroidDestroyed ()
-    {   
+    {
         // If all the asteroids are gone, schedule a transition
         if (countAsteroids() == 0)
         {
@@ -314,10 +347,11 @@ public class Controller implements ActionListener, Iterable<Participant>
         {
             // It may be time to gain a life
             if (ENHANCED && (score - scoreMemory > 1000)) {
+
                 lives++;
                 scoreMemory = (score / 1000) * 1000;
             }
-            
+
             // It may be time to make a game transition
             performTransition();
 
@@ -327,6 +361,12 @@ public class Controller implements ActionListener, Iterable<Participant>
 
             // Refresh screen
             display.refresh();
+        }
+        
+        else if(e.getSource() == addAlienShipTimer) {
+            if(!pstate.alienShipIsActive()) {
+                placeAlienShip();
+            }
         }
     }
 
@@ -342,15 +382,20 @@ public class Controller implements ActionListener, Iterable<Participant>
             transitionTime = Long.MAX_VALUE;
 
             // If there are no lives left, the game is over. Show the final screen.
-            if (lives <= 0) {
-                finalScreen();  
-            } else {
+            if (lives <= 0)
+            {
+                finalScreen();
+            }
+            else
+            {
                 // Replace the ship if there are lives remaining
                 placeShip();
                 // Places new asteroids if level has increased
-                if (countAsteroids() == 0) {
+                if (countAsteroids() == 0)
+                {
                     level++;
                     placeAsteroids(level);
+                    addAlienShipTimer.restart();
                 }
             }
         }
@@ -362,12 +407,13 @@ public class Controller implements ActionListener, Iterable<Participant>
     private int countAsteroids ()
     {
         int count = 0;
-        for (Participant p : this) {
+        for (Participant p : this)
+        {
             if (p instanceof Asteroid)
                 count++;
         }
         return count;
     }
 
-    
+
 }

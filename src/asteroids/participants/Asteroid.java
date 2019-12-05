@@ -164,10 +164,10 @@ public class Asteroid extends Participant implements ShipDestroyer
     @Override
     public void collidedWith (Participant p)
     {
+
         if (p instanceof AsteroidDestroyer)
         {
             new SpecialEffects(p, controller);
-
             // Expire the asteroid
             Participant.expire(this);
             Participant.expire(p);

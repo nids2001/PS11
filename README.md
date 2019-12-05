@@ -1,4 +1,4 @@
-# PS-11 
+# PS-11
 Final Project for CS 1410 - Fall 2019
 
 - [x] The splash screen and the initial screen have four asteroids.
