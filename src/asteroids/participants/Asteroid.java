@@ -176,9 +176,9 @@ public class Asteroid extends Participant implements ShipDestroyer
                 controller.addParticipant(new Asteroid(RANDOM.nextInt(3), 1, p.getX(), p.getY(), controller));
                 controller.addParticipant(new Asteroid(RANDOM.nextInt(3), 1, p.getX(), p.getY(), controller));
                 controller.sounds.playSound("bangLarge");
-                if (p.getOwner() == 1)
+                if (p.getOwner() == 1 || p.equals(controller.getShip()))
                     controller.addPoints(20);
-                if (p.getOwner() == 2)
+                if (p.getOwner() == 2 || p.equals(controller.getShipP2()))
                     controller.addPointsP2(20);
             }
             // else if medium asteroid, splits into 2 small asteroids
@@ -186,15 +186,15 @@ public class Asteroid extends Participant implements ShipDestroyer
                 controller.addParticipant(new Asteroid(RANDOM.nextInt(3), 0, p.getX(), p.getY(), controller));
                 controller.addParticipant(new Asteroid(RANDOM.nextInt(3), 0, p.getX(), p.getY(), controller));
                 controller.sounds.playSound("bangMedium");
-                if (p.getOwner() == 1)
+                if (p.getOwner() == 1 || p.equals(controller.getShip()))
                     controller.addPoints(50);
-                if (p.getOwner() == 2)
+                if (p.getOwner() == 2 || p.equals(controller.getShipP2()))
                     controller.addPointsP2(50);
             } else {
                 controller.sounds.playSound("bangSmall");
-                if (p.getOwner() == 1)
+                if (p.getOwner() == 1 || p.equals(controller.getShip()))
                     controller.addPoints(100);
-                if (p.getOwner() == 2)
+                if (p.getOwner() == 2 || p.equals(controller.getShipP2()))
                     controller.addPointsP2(100);
             }
             // else (if a small asteroid) it will disappear
