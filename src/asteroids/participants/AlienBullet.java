@@ -21,7 +21,6 @@ public class AlienBullet extends Bullet implements ShipDestroyer
     {
         super(x, y, direction, SPEED_LIMIT - 5, controller);
     }
-
     /**
     * When an alien bullet collides with a ShipDestroyer, the alien bullet expires
     */
@@ -29,7 +28,7 @@ public class AlienBullet extends Bullet implements ShipDestroyer
     public void collidedWith (Participant p)
     {
         if (p instanceof ShipDestroyer)
-            if(!(p instanceof AlienShip))
-            Participant.expire(this);
+            if (!(p instanceof AlienShip))
+                Participant.expire(this);
     }
 }

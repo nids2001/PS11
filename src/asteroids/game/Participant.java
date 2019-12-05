@@ -95,6 +95,15 @@ public abstract class Participant
     {
         return expired;
     }
+    
+    /**
+     * Only used for the bullet class........
+     * 
+     */
+    public int getOwner()
+    {
+        return 0;
+    }
 
     /**
      * Sets the velocity of this participant. The speed is in pixels per frame refresh and the direction is in radians.

@@ -19,7 +19,7 @@ public class ParticipantState implements Iterable<Participant>
     /** Participants that are waiting to be added to the game */
     private Set<Participant> pendingAdds;
     
-    private boolean bulletsMaxed;
+    private boolean p1maxed, p2maxed;
 
     /**
      * Creates an empty ParticipantState.
@@ -29,7 +29,7 @@ public class ParticipantState implements Iterable<Participant>
         // No participants at the start
         participants = new LinkedList<Participant>();
         pendingAdds = new HashSet<Participant>();
-        bulletsMaxed = false;
+        p1maxed = p2maxed = false;
     }
 
     /**
@@ -54,21 +54,25 @@ public class ParticipantState implements Iterable<Participant>
     }
     
     /**
-     * Ensure that there are only 3 bullets at a time
+     * Ensure that there are only 8 bullets at a time
      */
     public void bulletMax()
     {
-        int bulletCount = 0;
+        int p1count = 0;
+        int p2count = 0;
         for (Participant p: participants)
         {
             if (!p.isExpired() && p instanceof Bullet)
-                bulletCount++;
+            {
+                if (p.getOwner() == 1)
+                    p1count++;
+                if (p.getOwner() == 2)
+                    p2count++;
+            }
         }
         
-        if (bulletCount >= 8)
-            bulletsMaxed = true;
-        else
-            bulletsMaxed = false;
+        p1maxed = (p1count >= 8);
+        p2maxed = (p2count >= 8);   
     }
     
     /**
@@ -83,11 +87,19 @@ public class ParticipantState implements Iterable<Participant>
     }
     
     /**
-     * Returns whether the amount of bullets is maxed
+     * Returns whether the amount of bullets is maxed for p1
      */
-    public boolean isBulletMaxed()
+    public boolean isP1Maxed()
     {
-        return bulletsMaxed;
+        return p1maxed;
+    }
+    
+    /**
+     * Returns whether the amount of bullets is maxed for p2
+     */
+    public boolean isP2Maxed()
+    {
+        return p2maxed;
     }
     
     /**
