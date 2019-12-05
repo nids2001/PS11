@@ -163,14 +163,14 @@ public class AlienShip extends Participant implements ShipDestroyer, AsteroidDes
                 Participant.expire(p);
                 controller.alienShipDestroyed();
                 if (this.size == 0) {
-                    if (p.getOwner() == 1)
+                    if (p.getOwner() == 1 || p.equals(controller.getShip()))
                         controller.addPoints(1000);
-                    if (p.getOwner() == 2)
+                    if (p.getOwner() == 2 || p.equals(controller.getShipP2()))
                         controller.addPointsP2(1000);
                 } else {
-                    if (p.getOwner() == 1)
+                    if (p.getOwner() == 1 || p.equals(controller.getShip()))
                         controller.addPoints(200);
-                    if (p.getOwner() == 2)
+                    if (p.getOwner() == 2 || p.equals(controller.getShipP2()))
                         controller.addPointsP2(200);
                 }
             }

@@ -49,7 +49,7 @@ public class Controller implements ActionListener, Iterable<Participant>
 
     /** Number of lives left */
     private int lives, livesP2, score, scoreP2, level;
-    private int scoreMemory;
+    private int scoreMemory, scoreMemoryP2;
 
     /** used to store high score from current session*/
     private int highScore;
@@ -314,7 +314,6 @@ public class Controller implements ActionListener, Iterable<Participant>
 
 //        placeAlienShip();
 
-
         // //place mines
         // addParticipant(new Mine(50,80,1.0, Math.PI/4, this));
         // addParticipant(new Mine(80, 430, 2.0, Math.PI/8, this));
@@ -386,7 +385,7 @@ public class Controller implements ActionListener, Iterable<Participant>
         display.removeKeyListener(keyListener);
 
         // Decrement lives
-        // lives--;
+        lives--;
 
         // Play destruction sound (and end thrust sound if it's running)
         sounds.stopSound("thrust");
@@ -403,7 +402,7 @@ public class Controller implements ActionListener, Iterable<Participant>
     {
         display.removeKeyListener(keyListener2);
         // Decrement lives
-        //lives--;
+        livesP2--;
 
         // Play destruction sound (and end thrust sound if it's running)
         sounds.stopSound("thrust");
@@ -476,17 +475,12 @@ public class Controller implements ActionListener, Iterable<Participant>
         // Time to refresh the screen and deal with keyboard input
         else if (e.getSource() == refreshTimer)
         {
-            // Gaining a life every 1000 points
-            if (ENHANCED && (score - scoreMemory > 1000)) {
-
-                lives++;
-                scoreMemory = (score / 1000) * 1000;
-            }
-
             // It may be time to make a game transition
             performTransition();
-            if (ENHANCED)
+            if (ENHANCED) {
                 performTransition2();
+                gainLife();
+            }
 
             // Move the participants to their new locations
             pstate.moveParticipants();
@@ -504,6 +498,22 @@ public class Controller implements ActionListener, Iterable<Participant>
             {
                 placeAlienShip();
             }
+        }
+    }
+    
+    /**
+     * Gaining lives
+     */
+    private void gainLife ()
+    {
+        // Gaining a life every 1000 points
+        if (score - scoreMemory > 1000) {
+            lives++;
+            scoreMemory = (score / 1000) * 1000;
+        }
+        if (scoreP2 - scoreMemoryP2 > 1000) {
+            livesP2++;
+            scoreMemoryP2 = (scoreP2 / 1000) * 1000;
         }
     }
 
@@ -524,7 +534,8 @@ public class Controller implements ActionListener, Iterable<Participant>
             else
             {
                 // Replace the ship if there are lives remaining
-                placeShip();
+                if (lives > 0)
+                    placeShip();
                 // Places new asteroids if level has increased
                 if (countAsteroids() == 0)
                 {
@@ -551,10 +562,8 @@ public class Controller implements ActionListener, Iterable<Participant>
 
             if (lives <= 0 && livesP2 <= 0)
                 finalScreen();
-            else
-            {
+            else if (livesP2 > 0)
                 placeShipP2();
-            }
         }
     }
     /**

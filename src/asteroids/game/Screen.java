@@ -105,14 +105,15 @@ public class Screen extends JPanel
      */
     private void drawHUD (Graphics2D g)
     {
-        // Level and score HUD
+        
+        // Non-enhanced HUD
         g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 40));
-        g.drawString("" + controller.getLevel(), SIZE - 40, 45);
         g.drawString("" + controller.getScore(), 10, 45);
-
-        // Enhanced HUD
-        if (controller.getEnhanced())
+        if (!controller.getEnhanced())
+            g.drawString("" + controller.getLevel(), SIZE - 40, 45);
+        else {  // Enhanced HUD
             drawEnhancedHUD(g);
+        }
 
         // Drawing life count
         g.translate(-10, 75);
@@ -121,6 +122,18 @@ public class Screen extends JPanel
         {
             g.translate(0, 30);
             g.draw(Ship.createOutline());
+        }
+        
+        if (controller.getEnhanced()) {
+            g.translate(0, -30 * controller.getLives() +1);
+            
+            // Drawing life count
+            g.translate(0, SIZE+15);
+            for (int i = 0; i < controller.getLivesP2(); i++)
+            {
+                g.translate(0, -30);
+                g.draw(Ship.createOutline());
+            }
         }
     }
 
@@ -131,10 +144,15 @@ public class Screen extends JPanel
      */
     private void drawEnhancedHUD (Graphics2D g)
     {
+        g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
+        // High Score
         if (legend.equals(GAME_OVER))
-        {
-            g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
             g.drawString("High Score: " + controller.getHighScore(), 10, SIZE - 15);
-        }
+        
+        g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 40));
+        // P2 Score
+        g.drawString("" + controller.getScoreP2(), SIZE - 95, 45);
+        // Level
+        g.drawString("Level: " + controller.getLevel(), SIZE / 2 - 37, 45);
     }
 }
