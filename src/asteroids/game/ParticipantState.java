@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import asteroids.participants.AlienShip;
 import asteroids.participants.Bullet;
 
 /**
@@ -68,6 +69,17 @@ public class ParticipantState implements Iterable<Participant>
             bulletsMaxed = true;
         else
             bulletsMaxed = false;
+    }
+    
+    /**
+     * returns if there is an alien ship that isn't expired
+     */
+    public boolean alienShipIsActive() {
+        for(Participant p: participants) {
+            if(!p.isExpired() && p instanceof AlienShip)
+                return true;
+        }
+        return false;
     }
     
     /**

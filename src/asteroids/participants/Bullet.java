@@ -19,7 +19,7 @@ public class Bullet extends Participant implements AsteroidDestroyer
     private Controller controller;
     
     /**
-     * Constructs a ship at the specified coordinates that is pointed in the given direction.
+     * Constructs a bullet at the specified coordinates that is pointed in the given direction.
      */
     public Bullet (double x, double y, double direction, double speed, Controller controller)
     {
@@ -45,6 +45,7 @@ public class Bullet extends Participant implements AsteroidDestroyer
     {
         if (p instanceof ShipDestroyer)
             Participant.expire(this);
+        
     }
     
 
