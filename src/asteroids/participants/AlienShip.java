@@ -159,7 +159,6 @@ public class AlienShip extends Participant implements ShipDestroyer
         {
             if (p instanceof AsteroidDestroyer)
             {
-                new SpecialEffects(this, controller);
                 Participant.expire(this);
                 Participant.expire(p);
                 controller.alienShipDestroyed();

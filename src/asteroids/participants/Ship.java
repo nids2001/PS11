@@ -117,9 +117,12 @@ public class Ship extends Participant implements AsteroidDestroyer
             turningRight =b;
     }
     
+    /** set accelerating */
     public void setAccelerating(boolean b)
     {
         accelerating = b;
+        
+        //if accelerating, create the flame on on ship
         if (b) {
             Path2D.Double poly = new Path2D.Double();
             poly.moveTo(21, 0);
@@ -134,7 +137,9 @@ public class Ship extends Participant implements AsteroidDestroyer
             poly.lineTo(-21, -12);
             poly.closePath();
             outline = poly;
-        } else {
+        }
+        //if not, create regular outline
+        else {
             outline = createOutline();
         }
     }
@@ -155,13 +160,12 @@ public class Ship extends Participant implements AsteroidDestroyer
     {
         if (p instanceof ShipDestroyer)
         {
-            new SpecialEffects(this, controller, true);
+            //creates and adds the debris left by the ship
+            new SpecialEffects(this, controller);
             
             // Expire the ship from the game
             Participant.expire(this);
 
-            
-            
             // Tell the controller the ship was destroyed
             controller.shipDestroyed();
         }

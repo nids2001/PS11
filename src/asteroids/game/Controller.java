@@ -15,8 +15,9 @@ import sounds.Sounds;
  */
 public class Controller implements ActionListener, Iterable<Participant>
 {
+    /** true if enhanced version is being playing, false otherwise */
     private boolean ENHANCED;
-    
+
     /** The state of all the Participants */
     protected ParticipantState pstate;
 
@@ -26,13 +27,17 @@ public class Controller implements ActionListener, Iterable<Participant>
     private AlienShip alienShip;
 
     /** When this timer goes off, it is time to refresh the animation */
-    private Timer refreshTimer, addAlienShipTimer;
+    private Timer refreshTimer;
+    
+    /** When this timer goes off, it is time to add an alien ship to the animation */
+    private Timer addAlienShipTimer;
 
     /** Sound player */
     public Sounds sounds;
-    
+
+    /**key listener for when keys are pressed in the game */
     private AsteroidsKeyListener keyListener;
-    
+
     /**
      * The time at which a transition to a new stage of the game should be made. A transition is scheduled a few seconds
      * in the future to give the user time to see what has happened before doing something like going to a new level or
@@ -40,9 +45,13 @@ public class Controller implements ActionListener, Iterable<Participant>
      */
     private long transitionTime;
 
-    /** Number of lives left */
+    /** Number of lives left, game score, and level currently being played */
     private int lives, score, level;
+    
+    /** variable used to keep check if additional life should be added*/
     private int scoreMemory;
+    
+    /** used to store high score from current session*/
     private int highScore;
 
     /** The game display */
@@ -60,16 +69,19 @@ public class Controller implements ActionListener, Iterable<Participant>
             ENHANCED = true;
         else
             ENHANCED = false;
-        
+
+        //set session high score to 0
         highScore = 0;
-        keyListener = new AsteroidsKeyListener(this);
         
+        //Initialize the AsteroidsKeyListener
+        keyListener = new AsteroidsKeyListener(this);
+
         // Initialize the ParticipantState
         pstate = new ParticipantState();
 
         // Set up the refresh timer.
         refreshTimer = new Timer(FRAME_INTERVAL, this);
-        
+
         // Set up time to delay alien ship coming on screen
         addAlienShipTimer = new Timer(RANDOM.nextInt(5000) + 5000, this);
 
@@ -129,7 +141,7 @@ public class Controller implements ActionListener, Iterable<Participant>
     {
         return highScore;
     }
-    
+
     /**
      * Returns score
      */
@@ -137,7 +149,7 @@ public class Controller implements ActionListener, Iterable<Participant>
     {
         return level;
     }
-    
+
     /**
      * Returns pstate
      */
@@ -145,7 +157,7 @@ public class Controller implements ActionListener, Iterable<Participant>
     {
         return pstate;
     }
-    
+
     /**
      * Returns enhanced
      */
@@ -190,13 +202,15 @@ public class Controller implements ActionListener, Iterable<Participant>
         display.addKeyListener(keyListener);
     }
 
+    /**
+     * Place a new alien ship in the animation
+     */
     private void placeAlienShip ()
     {
 
         alienShip = new AlienShip(this);
-        
+
         addParticipant(alienShip);
-        display.addKeyListener(keyListener);
     }
 
     /**
@@ -241,18 +255,14 @@ public class Controller implements ActionListener, Iterable<Participant>
 
         // Place the ship
         placeShip();
-        
-//        placeAlienShip();
 
-
-        // //place mines
-        // addParticipant(new Mine(50,80,1.0, Math.PI/4, this));
-        // addParticipant(new Mine(80, 430, 2.0, Math.PI/8, this));
+        //placeAlienShip();
 
         // Reset statistics
         lives = 3;
         score = 0;
         level = 1;
+        
         // Clear the transition time
         transitionTime = Long.MAX_VALUE;
 
@@ -288,8 +298,9 @@ public class Controller implements ActionListener, Iterable<Participant>
     public void shipDestroyed ()
     {
         display.removeKeyListener(keyListener);
+        
         // Decrement lives
-        //lives--;
+        // lives--;
 
         // Play destruction sound (and end thrust sound if it's running)
         sounds.stopSound("thrust");
@@ -305,12 +316,20 @@ public class Controller implements ActionListener, Iterable<Participant>
     public void alienShipDestroyed ()
     {
         display.removeKeyListener(keyListener);
+        
+        //make alienShip null
         alienShip = null;
+        
+        //start add alien ship timer
         addAlienShipTimer.start();
+        
+        //stop sound being played
         if (level >= 3)
             sounds.stopSound("saucerSmall");
         else
             sounds.stopSound("saucerBig");
+        
+        //play bangAlienShip sound
         sounds.playSound("bangAlienShip");
     }
 
@@ -351,8 +370,8 @@ public class Controller implements ActionListener, Iterable<Participant>
         else if (e.getSource() == refreshTimer)
         {
             // It may be time to gain a life
-            if (ENHANCED && (score - scoreMemory > 1000)) {
-
+            if (ENHANCED && (score - scoreMemory > 1000))
+            {
                 lives++;
                 scoreMemory = (score / 1000) * 1000;
             }
@@ -367,9 +386,13 @@ public class Controller implements ActionListener, Iterable<Participant>
             // Refresh screen
             display.refresh();
         }
-        
-        else if(e.getSource() == addAlienShipTimer) {
-            if(!pstate.alienShipIsActive()) {
+
+        //it may be time to add an alien ship 
+        else if (e.getSource() == addAlienShipTimer)
+        {
+            //if there isn't an alien ship, place a new one
+            if (!pstate.alienShipIsActive())
+            {
                 placeAlienShip();
             }
         }
@@ -419,6 +442,5 @@ public class Controller implements ActionListener, Iterable<Participant>
         }
         return count;
     }
-
 
 }
