@@ -44,11 +44,11 @@ Final Project EC for CS 1410 - Fall 2019
 
 - [ ] Cool ship redesign [4 points]
 
-- [ ] **?** Asteroids bounce when they collide with each other [6 points]
+- [x] Asteroids bounce when they collide with each other [6 points]
 
 - [x] Highest score for current session displayed on screen [4 points]
 
-- [ ] **?** Objects on screen with different colors per object [4 points]
+- [x] Objects on screen with different colors per object [4 points]
 
 - [x] Two or more players (must have full stats and controls for each) [20 points]
 
