@@ -200,7 +200,7 @@ public class Controller implements KeyListener, ActionListener, Iterable<Partici
         // Place the ship
         placeShip();
         
-        placeAlienShip();
+        //placeAlienShip();
 
 
         // //place mines

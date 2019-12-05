@@ -33,7 +33,7 @@ public class AlienShip extends Participant implements ShipDestroyer
 
         setPosition(-52, RANDOM.nextInt(SIZE + 1));
 
-        if (this.controller.getLevel() <= 3)
+        if (this.controller.getLevel() >= 3)
         {
             size = 0;
             length = 20;
