@@ -146,8 +146,11 @@ public class Screen extends JPanel
     {
         g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
         // High Score
-        if (legend.equals(GAME_OVER))
+        if (legend.equals(GAME_OVER)) {
             g.drawString("High Score: " + controller.getHighScore(), 10, SIZE - 15);
+            g.drawString("ALL TIME HIGH SCORE:" + controller.persistentHigh, 260, SIZE - 15 );
+        }
+        
         
         g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 40));
         // P2 Score
