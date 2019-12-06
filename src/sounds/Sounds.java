@@ -9,11 +9,15 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class Sounds
 {
-    // Individual clip files
+    /**
+     * Individual Clip objects for each sound file
+     */
     private Clip bangAS, bangL, bangM, bangShip, bangS, beat1, beat2,
                 fire, saucerB, saucerS, thrust;
     
-    // Construtor
+    /**
+     * Constructor loads sound files to individual Clip objects to be played
+     */
     public Sounds ()
     {
         bangAS = createClip("/sounds/bangAlienShip.wav");
@@ -29,6 +33,12 @@ public class Sounds
         thrust = createClip("/sounds/thrust.wav");
     }
     
+    /**
+     * Creates Clip from .wav file
+     * 
+     * @param soundFile disc url
+     * @return Clip containing the soundFile
+     */
     private Clip createClip (String soundFile)
     {
         try (BufferedInputStream sound = new BufferedInputStream(getClass().getResourceAsStream(soundFile)))
@@ -46,9 +56,9 @@ public class Sounds
     }
     
     /**
-     * Stops a certain sound
+     * Stops a specified sound
      * 
-     * @param s name of sound file
+     * @param s name of sound file as listed in sounds package
      */
     public void stopSound (String s)
     {
@@ -72,9 +82,9 @@ public class Sounds
     }
     
     /**
-     * Plays a certain sound
+     * Plays a specified
      * 
-     * @param s name of the sound file
+     * @param s name of the sound file as listed in sounds package
      */
     public void playSound (String s)
     {
@@ -152,11 +162,6 @@ public class Sounds
         
         // thrust sound
         if (s.equals("thrust")) {
-//            if (thrust.isRunning())
-//            {
-//                thrust.stop();
-//            }
-//            thrust.setFramePosition(0);
             thrust.loop(Clip.LOOP_CONTINUOUSLY);  
         }
     }
