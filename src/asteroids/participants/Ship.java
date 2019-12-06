@@ -18,8 +18,11 @@ public class Ship extends Participant implements AsteroidDestroyer
 
     /** Game controller */
     private Controller controller;
+    
+    /** Movement toggles */
     private boolean turningLeft, turningRight, accelerating;
     
+    /** Whether or not the ship is representing Player2 */
     public boolean p2;
     public int owner;
 
@@ -31,12 +34,11 @@ public class Ship extends Participant implements AsteroidDestroyer
         this.controller = controller;
         setPosition(x, y);
         setRotation(direction);
+        turningLeft = turningRight = accelerating = false;
         
         outline = createOutline();
-        
-        turningLeft = turningRight = accelerating = false;
 
-        // Schedule a boop every second
+        // Schedule a sound every second
         if (!p2)
         {
             new ParticipantCountdownTimer(this, "boop", 1000);
@@ -79,6 +81,9 @@ public class Ship extends Participant implements AsteroidDestroyer
         return point.getY();
     }
 
+    /**
+     * Returns outline of the ship
+     */
     @Override
     protected Shape getOutline ()
     {
@@ -109,6 +114,9 @@ public class Ship extends Participant implements AsteroidDestroyer
             rotate(-Math.PI / 16);
     }
     
+    /**
+     * Sest the owner of the ship to x (1=p1, 2=p2)
+     */
     public void setOwner(int x)
     {
         owner = x;

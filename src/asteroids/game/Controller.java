@@ -3,7 +3,6 @@ package asteroids.game;
 import static asteroids.game.Constants.*;
 import java.awt.event.*;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Iterator;
@@ -586,7 +585,7 @@ public class Controller implements ActionListener, Iterable<Participant>
             transitionTime = Long.MAX_VALUE;
 
             // If there are no lives left, the game is over. Show the final screen.
-            if (lives <= 0 && livesP2 <= 0)
+            if (lives <= 0 && (!ENHANCED || livesP2 <= 0))
                 finalScreen();
             else
             {

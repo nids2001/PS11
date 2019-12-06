@@ -68,29 +68,29 @@ public class Screen extends JPanel
             {
                 if (p instanceof AlienShip)
                 {
-                    g.setColor(Color.GREEN);
+                    g.setColor(Color.GREEN); // Alien Ships are green
                 }
 
                 if (p instanceof Asteroid)
                 {
-                    g.setColor(Color.ORANGE);
+                    g.setColor(Color.ORANGE); // Asteroids are orange
                 }
+                
                 if (p instanceof Ship)
                 {
                     if (p.equals(controller.getShip()))
                     {
-                        g.setColor(Color.PINK);
+                        g.setColor(Color.PINK); // Player1 is pink
                     }
-
+                    
                     else if (p.equals(controller.getShipP2()))
                     {
-                        g.setColor(Color.CYAN);
+                        g.setColor(Color.CYAN); // Player2 is cyan
                     }
                 }
             }
             p.draw(g);
             g.setColor(Color.WHITE);
-
         }
 
         // in-game HUD
@@ -124,11 +124,9 @@ public class Screen extends JPanel
             g.draw(Ship.createOutline());
         }
         
+        // Drawing Player2's life count if in Enhanced Mode
         if (controller.getEnhanced()) {
-            g.translate(0, -30 * controller.getLives() +1);
-            
-            // Drawing life count
-            g.translate(0, SIZE+15);
+            g.translate(0, -30 * controller.getLives() + SIZE+16);
             for (int i = 0; i < controller.getLivesP2(); i++)
             {
                 g.translate(0, -30);
@@ -145,17 +143,16 @@ public class Screen extends JPanel
     private void drawEnhancedHUD (Graphics2D g)
     {
         g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
-        // High Score
+        // show both session and alltime high scores
         if (legend.equals(GAME_OVER)) {
             g.drawString("High Score: " + controller.getHighScore(), 10, SIZE - 15);
             g.drawString("ALL TIME HIGH SCORE:" + controller.persistentHigh, 260, SIZE - 15 );
         }
         
-        
         g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 40));
-        // P2 Score
+        // show P2 Score
         g.drawString("" + controller.getScoreP2(), SIZE - 95, 45);
-        // Level
+        // show Level
         g.drawString("Level: " + controller.getLevel(), SIZE / 2 - 37, 45);
     }
 }

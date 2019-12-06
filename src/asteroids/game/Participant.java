@@ -97,8 +97,9 @@ public abstract class Participant
     }
     
     /**
-     * Only used for the bullet class........
+     * Only used for Bullets and Ships. See Bullet Class or Ship Class for details
      * 
+     * @return 0
      */
     public int getOwner()
     {

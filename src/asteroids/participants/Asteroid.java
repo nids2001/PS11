@@ -23,6 +23,7 @@ public class Asteroid extends Participant implements ShipDestroyer
     /** The game controller */
     private Controller controller;
     
+    /** Whether or not the asteroid can bounce */
     private boolean bounce;
 
     /**
@@ -75,9 +76,8 @@ public class Asteroid extends Participant implements ShipDestroyer
         // creates shape outline
         createAsteroidOutline(variety, size);
         
+        // Asteroid will be able to bounce after half a second (to avoid smaller asteroids getting caught in larger ones)
         new ParticipantCountdownTimer(this, "bounce", 500);
-        
-        
     }
 
     @Override
@@ -166,6 +166,9 @@ public class Asteroid extends Participant implements ShipDestroyer
         return size;
     }
 
+    /**
+     * Bounces the asteroids to a random direction when they collide with one another
+     */
     public void bounce(Participant one, Participant two) {
         one.setDirection(one.getDirection() + Math.PI/2 + (RANDOM.nextDouble() * 2 -1));
         two.setDirection(two.getDirection() + Math.PI/2 + (RANDOM.nextDouble() * 2 -1));
@@ -179,6 +182,7 @@ public class Asteroid extends Participant implements ShipDestroyer
     @Override
     public void collidedWith (Participant p)
     {
+        // If running into an asteroid in Enhanced Mode, bounces the asteroids
         if (controller.getEnhanced() && bounce)
         {
             if (p instanceof Asteroid)
@@ -195,12 +199,14 @@ public class Asteroid extends Participant implements ShipDestroyer
             // Expire the asteroid
             Participant.expire(this);
             Participant.expire(p);
-
+            
+            // if large asteroid, splits into 2 medium asteroids
             if (size == 2)
             {
                 controller.addParticipant(new Asteroid(RANDOM.nextInt(3), 1, p.getX(), p.getY(), controller));
                 controller.addParticipant(new Asteroid(RANDOM.nextInt(3), 1, p.getX(), p.getY(), controller));
                 controller.sounds.playSound("bangLarge");
+                // points to the player that destroyed the asteroid
                 if (p.getOwner() == 1 || p.equals(controller.getShip()))
                     controller.addPoints(20);
                 if (p.getOwner() == 2 || p.equals(controller.getShipP2()))
@@ -212,6 +218,7 @@ public class Asteroid extends Participant implements ShipDestroyer
                 controller.addParticipant(new Asteroid(RANDOM.nextInt(3), 0, p.getX(), p.getY(), controller));
                 controller.addParticipant(new Asteroid(RANDOM.nextInt(3), 0, p.getX(), p.getY(), controller));
                 controller.sounds.playSound("bangMedium");
+                // points to the player that destroyed the asteroid
                 if (p.getOwner() == 1 || p.equals(controller.getShip()))
                     controller.addPoints(50);
                 if (p.getOwner() == 2 || p.equals(controller.getShipP2()))
@@ -220,18 +227,19 @@ public class Asteroid extends Participant implements ShipDestroyer
             else
             {
                 controller.sounds.playSound("bangSmall");
+                // points to the player that destroyed the asteroid
                 if (p.getOwner() == 1 || p.equals(controller.getShip()))
                     controller.addPoints(100);
                 if (p.getOwner() == 2 || p.equals(controller.getShipP2()))
                     controller.addPointsP2(100);
-            }
-            // else (if a small asteroid) it will disappear
+            } // else (if a small asteroid) it will disappear
 
             // Inform the controller
             controller.asteroidDestroyed();
 
         }
     }
+    
     /**
      * This method is invoked when a ParticipantCountdownTimer completes its countdown.
      */

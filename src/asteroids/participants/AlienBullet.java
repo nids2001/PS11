@@ -6,6 +6,11 @@ import asteroids.destroyers.ShipDestroyer;
 import asteroids.game.Controller;
 import asteroids.game.Participant;
 
+/**
+ * 
+ * Representation of bullets shot by the Alien Ship
+ *
+ */
 public class AlienBullet extends Bullet implements ShipDestroyer
 {
     /** Outline of the bullet */

@@ -19,6 +19,7 @@ public class ParticipantState implements Iterable<Participant>
     /** Participants that are waiting to be added to the game */
     private Set<Participant> pendingAdds;
     
+    /** Whether or not Player1 and Player2 have the max amount of bullets on screen each */
     private boolean p1maxed, p2maxed;
 
     /**
@@ -54,10 +55,11 @@ public class ParticipantState implements Iterable<Participant>
     }
     
     /**
-     * Ensure that there are only 8 bullets at a time
+     * Ensure that there are only 8 bullets at a time from each player
      */
     public void bulletMax()
     {
+        // Counting bullets for each player
         int p1count = 0;
         int p2count = 0;
         for (Participant p: participants)
@@ -71,7 +73,7 @@ public class ParticipantState implements Iterable<Participant>
             }
         }
         
-//        System.out.println(p2count);
+        // Sets whether the max amount of bullets has been reached by either player
         p1maxed = (p1count >= 8);
         p2maxed = (p2count >= 8);   
     }
@@ -88,7 +90,7 @@ public class ParticipantState implements Iterable<Participant>
     }
     
     /**
-     * Returns whether the amount of bullets is maxed for p1
+     * Returns whether the amount of bullets is maxed for player1
      */
     public boolean isP1Maxed()
     {
@@ -96,7 +98,7 @@ public class ParticipantState implements Iterable<Participant>
     }
     
     /**
-     * Returns whether the amount of bullets is maxed for p2
+     * Returns whether the amount of bullets is maxed for player2
      */
     public boolean isP2Maxed()
     {

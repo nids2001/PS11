@@ -6,6 +6,11 @@ import java.awt.event.KeyListener;
 import asteroids.participants.Bullet;
 import asteroids.participants.Ship;
 
+/**
+ * 
+ * KeyListener for Asteroids Game
+ *
+ */
 public class AsteroidsKeyListener implements KeyListener
 {
     // Controller reference

@@ -3,22 +3,33 @@ package asteroids.participants;
 import static asteroids.game.Constants.RANDOM;
 import static asteroids.game.Constants.SHIP_HEIGHT;
 import static asteroids.game.Constants.SHIP_WIDTH;
-import java.awt.Shape;
-import java.awt.geom.Point2D;
 import asteroids.game.Controller;
 import asteroids.game.Participant;
 import asteroids.participants.DustParticle;
 
+/**
+ * 
+ * Particle system for explosions
+ * 
+ */
 public class SpecialEffects
 {
-
-    private Shape outline;
-    private boolean ship;
+    /** How far the particles can fly */
     private final int RANGE = 5;
+    
+    /** speed of the particles*/
     private final double SPEED = 1.5;
+    
+    /** Each particle wtihin the explosion */
     private DustParticle particle1, particle2, particle3, particle4, line1, line2, line3;
+    
+    /** Controller reference */
     private Controller controller;
 
+    /**
+     * Creates an explosion with dust particles
+     * 
+     */
     public SpecialEffects (Participant p, Controller cont)
     {
         this.controller = cont;
@@ -37,7 +48,6 @@ public class SpecialEffects
             controller.addParticipant(line1);
             controller.addParticipant(line2);
             controller.addParticipant(line3);
-
         }
 
         // make the dust particles
@@ -58,5 +68,4 @@ public class SpecialEffects
         controller.addParticipant(particle3);
         controller.addParticipant(particle4);
     }
-
 }
