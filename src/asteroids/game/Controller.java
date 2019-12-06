@@ -66,6 +66,7 @@ public class Controller implements ActionListener, Iterable<Participant>
     /** used to store high score from current session */
     private int highScore;
     
+    /** used to score the all time high score */
     public int persistentHigh;
 
     /** The game display */
@@ -236,7 +237,9 @@ public class Controller implements ActionListener, Iterable<Participant>
         display.setLegend(GAME_OVER);
         
         display.removeKeyListener(keyListener);
+        display.removeKeyListener(keyListener2);
 
+        // Updates the all-time high score
         if (ENHANCED)
         {
             File scoreFile = new File("highest_score.txt");
@@ -252,8 +255,6 @@ public class Controller implements ActionListener, Iterable<Participant>
                 scan.close();
                 writer.close();
             }
-
-            display.removeKeyListener(keyListener2);
         }
     }
 
