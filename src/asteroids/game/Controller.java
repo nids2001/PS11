@@ -347,7 +347,7 @@ public class Controller implements ActionListener, Iterable<Participant>
 
         // Place the ship
         placeShip();
-        // Plae Player2 ship if in Enhanced Mode
+        // Place Player2 ship if in Enhanced Mode
         if (ENHANCED)
             placeShipP2();
 
