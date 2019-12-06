@@ -7,6 +7,10 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+/**
+ * Class to handle sound files, loading, playing and stopping them
+ * 
+ */
 public class Sounds
 {
     /**
