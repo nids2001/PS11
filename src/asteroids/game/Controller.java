@@ -2,7 +2,12 @@ package asteroids.game;
 
 import static asteroids.game.Constants.*;
 import java.awt.event.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Iterator;
+import java.util.Scanner;
 import javax.swing.*;
 import asteroids.participants.AlienShip;
 import asteroids.participants.Asteroid;
@@ -58,8 +63,10 @@ public class Controller implements ActionListener, Iterable<Participant>
     /** Stores the players' scores to the nearest 1000 to give new lives for every 1000 */
     private int scoreMemory, scoreMemoryP2;
 
-    /** used to store high score from current session*/
+    /** used to store high score from current session */
     private int highScore;
+    
+    public int persistentHigh;
 
     /** The game display */
     private Display display;
@@ -76,7 +83,7 @@ public class Controller implements ActionListener, Iterable<Participant>
 
         highScore = 0;
 
-        //Initialize the AsteroidsKeyListener
+        // Initialize the AsteroidsKeyListener
         keyListener = new AsteroidsKeyListener(this);
 
         // Initialize the ParticipantState
@@ -214,8 +221,10 @@ public class Controller implements ActionListener, Iterable<Participant>
 
     /**
      * The game is over. Displays a message to that effect.
+     * 
+     * @throws IOException
      */
-    private void finalScreen ()
+    private void finalScreen () throws IOException
     {
         // Setting the High Score
         if (score > scoreP2 && score > highScore)
@@ -227,8 +236,25 @@ public class Controller implements ActionListener, Iterable<Participant>
         display.setLegend(GAME_OVER);
         
         display.removeKeyListener(keyListener);
+
         if (ENHANCED)
+        {
+            File scoreFile = new File("highest_score.txt");
+            Scanner scan = new Scanner(scoreFile);
+            scan.useDelimiter("﻿");
+            persistentHigh = scan.nextInt();
+
+            if (highScore > persistentHigh)
+            {
+                persistentHigh = highScore;
+                FileWriter writer = new FileWriter(scoreFile);
+                writer.write(Integer.toString(highScore));
+                scan.close();
+                writer.close();
+            }
+
             display.removeKeyListener(keyListener2);
+        }
     }
 
     /**
@@ -333,10 +359,10 @@ public class Controller implements ActionListener, Iterable<Participant>
         // Clear the transition time
         transitionTime = Long.MAX_VALUE;
 
-        //stop add alien ship timer
+        // stop add alien ship timer
         addAlienShipTimer.stop();
 
-        //stop alien ship sounds playing
+        // stop alien ship sounds playing
         sounds.stopSound("saucerBig");
         sounds.stopSound("saucerSmall");
         if (ENHANCED)
@@ -346,11 +372,11 @@ public class Controller implements ActionListener, Iterable<Participant>
         display.removeKeyListener(keyListener);
         display.addKeyListener(keyListener);
         // P2 controls
-        if (ENHANCED) {
+        if (ENHANCED)
+        {
             display.removeKeyListener(keyListener2);
             display.addKeyListener(keyListener2);
         }
-
 
         // Give focus to the game screen
         display.requestFocusInWindow();
@@ -425,10 +451,10 @@ public class Controller implements ActionListener, Iterable<Participant>
     public void alienShipDestroyed ()
     {
 
-        //make alienShip null
+        // make alienShip null
         alienShip = null;
 
-        //start add alien ship timer
+        // start add alien ship timer
         addAlienShipTimer.start();
         
         // Bangs then turns off alien sounds
@@ -484,9 +510,26 @@ public class Controller implements ActionListener, Iterable<Participant>
         else if (e.getSource() == refreshTimer)
         {
             // It may be time to make a game transition
-            performTransition();
-            if (ENHANCED) {
-                performTransition2();
+            try
+            {
+                performTransition();
+            }
+            catch (IOException e2)
+            {
+                // TODO Auto-generated catch block
+                e2.printStackTrace();
+            }
+            if (ENHANCED)
+            {
+                try
+                {
+                    performTransition2();
+                }
+                catch (IOException e1)
+                {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
                 gainLife();
             }
 
@@ -500,28 +543,30 @@ public class Controller implements ActionListener, Iterable<Participant>
             display.refresh();
         }
 
-        //it may be time to add an alien ship
+        // it may be time to add an alien ship
         else if (e.getSource() == addAlienShipTimer)
         {
-            //if there isn't an alien ship, place a new one
+            // if there isn't an alien ship, place a new one
             if (!pstate.alienShipIsActive())
             {
                 placeAlienShip();
             }
         }
     }
-    
+
     /**
      * Gives a life to a player if they've gained 1000 points
      */
     private void gainLife ()
     {
         // Gaining a life every 1000 points
-        if (score - scoreMemory > 1000) {
+        if (score - scoreMemory > 1000)
+        {
             lives++;
             scoreMemory = (score / 1000) * 1000;
         }
-        if (scoreP2 - scoreMemoryP2 > 1000) {
+        if (scoreP2 - scoreMemoryP2 > 1000)
+        {
             livesP2++;
             scoreMemoryP2 = (scoreP2 / 1000) * 1000;
         }
@@ -531,7 +576,7 @@ public class Controller implements ActionListener, Iterable<Participant>
      * If the first transition time has been reached, transition to a new state. Used for Game Over,
      * new level, and ship death (of Player1 in Enhanced Mode)
      */
-    private void performTransition ()
+    private void performTransition () throws IOException
     {
         // Do something only if the time has been reached
         if (transitionTime <= System.currentTimeMillis())
@@ -565,7 +610,7 @@ public class Controller implements ActionListener, Iterable<Participant>
      * If the second transition time has been reached, transition to a new state. Used for Game Over
      * and Player2 Ship destroyed
      */
-    private void performTransition2 ()
+    private void performTransition2 () throws IOException
     {
         // Do something only if the time has been reached
         if (transitionTime2 <= System.currentTimeMillis())
