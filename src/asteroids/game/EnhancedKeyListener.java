@@ -8,15 +8,22 @@ import asteroids.participants.Ship;
 
 public class EnhancedKeyListener implements KeyListener
 {
+    // Controller reference
     private Controller controller;
+    // Player2 reference
     private Ship ship;
     
+    /**
+     * Creates a keyListener for Player2 in Enhanced Mode
+     * 
+     * @param c given Contoller
+     */
     public EnhancedKeyListener (Controller c) {
         controller = c;
     }
     
     /**
-     * If a key of interest is pressed, record that it is down.
+     * If a key of interest is pressed, record that it is down, toggling said ship movement on.
      */
     @Override
     public void keyPressed (KeyEvent e)
@@ -37,6 +44,9 @@ public class EnhancedKeyListener implements KeyListener
             controller.getPState().addParticipant(new Bullet("p2", ship.getXNose(), ship.getYNose(), ship.getRotation(), SPEED_LIMIT+5, controller));
     }
     
+    /**
+     * If a key of interest is released, record that it is down, toggling said ship movement off.
+     */
     @Override
     public void keyReleased (KeyEvent e)
     {

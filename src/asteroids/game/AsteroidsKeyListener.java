@@ -8,16 +8,22 @@ import asteroids.participants.Ship;
 
 public class AsteroidsKeyListener implements KeyListener
 {
-    
+    // Controller reference
     private Controller controller;
+    // Player1 reference
     private Ship ship;
     
+    /**
+     * Creates a keyListener for Player1
+     * 
+     * @param c given Contoller
+     */
     public AsteroidsKeyListener (Controller c) {
         controller = c;
     }
     
     /**
-     * If a key of interest is pressed, record that it is down.
+     * If a key of interest is pressed, record that it is down, toggling said ship movement on.
      */
     @Override
     public void keyPressed (KeyEvent e)
@@ -44,6 +50,9 @@ public class AsteroidsKeyListener implements KeyListener
             enhancedAltKeyPressed(e);
     }
     
+    /**
+     * if a key of interest is released, record that it was released, toggling said ship movement off.
+     */
     @Override
     public void keyReleased (KeyEvent e)
     {
@@ -64,7 +73,7 @@ public class AsteroidsKeyListener implements KeyListener
     }
     
     /**
-     * Alternate (WASD) controls
+     * Alternate (WASD) key-press controls for Classic Mode
      * 
      */
     private void altKeyPressed(KeyEvent e)
@@ -83,6 +92,27 @@ public class AsteroidsKeyListener implements KeyListener
             controller.getPState().addParticipant(new Bullet("p1", ship.getXNose(), ship.getYNose(), ship.getRotation(), SPEED_LIMIT+5, controller));
     }
     
+    /**
+     * Alternate (WASD) key-release controls for Classic Mode
+     *
+     */
+    public void altKeyReleased (KeyEvent e)
+    {
+        // Alt end movement
+        if (e.getKeyCode() == KeyEvent.VK_D)
+            ship.setTurning("left", false);
+        if (e.getKeyCode() == KeyEvent.VK_A)
+            ship.setTurning("right", false);
+        if (e.getKeyCode() == KeyEvent.VK_W) {
+            ship.setAccelerating(false);
+            controller.sounds.stopSound("thrust");
+        }
+    }
+    
+    /**
+     * In Enhanced Mode, the keys alternate keys for Player1 change from WASD to IJKL
+     * 
+     */
     private void enhancedAltKeyPressed(KeyEvent e)
     {
      // Alt Movement
@@ -100,24 +130,7 @@ public class AsteroidsKeyListener implements KeyListener
     }
     
     /**
-     * Alternate (WASD) controls
-     * 
-     */
-    public void altKeyReleased (KeyEvent e)
-    {
-        // Alt end movement
-        if (e.getKeyCode() == KeyEvent.VK_D)
-            ship.setTurning("left", false);
-        if (e.getKeyCode() == KeyEvent.VK_A)
-            ship.setTurning("right", false);
-        if (e.getKeyCode() == KeyEvent.VK_W) {
-            ship.setAccelerating(false);
-            controller.sounds.stopSound("thrust");
-        }
-    }
-    
-    /**
-     * Alternate (WASD) controls
+     * In Enhanced Mode, the keys alternate keys for Player1 change from WASD to IJKL
      * 
      */
     private void enhancedAltKeyReleased (KeyEvent e)
